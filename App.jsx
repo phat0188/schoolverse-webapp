@@ -65,37 +65,63 @@ function Campus(){const nav=useNavigate();const done=seedMissions.filter(m=>m.pr
         <img src={schoolMapImg} alt='Bản đồ nhỏ'/><span>🧭</span>
       </button>
     </section></Shell>}
-function MapPage(){const nav=useNavigate();const [sel,setSel]=useState(locations[0]);return <Shell><section className='page map-page-v11'>
-      <div className='pagetitle map-title-v11'>
-        <div><span className='badge'>🗺️ SCHOOLVERSE MAP</span><h1>Bản đồ trường học 3D</h1><p>Chạm vào một điểm trên bản đồ để khám phá.</p></div>
-        <div className='summary map-summary-v11'><span>✨ 7 khu vực</span><span>🎯 3 nhiệm vụ gần đây</span></div>
+function MapPage(){const nav=useNavigate();const [sel,setSel]=useState(locations[0]);return <Shell><section className='page map-page-v12'>
+      <div className='pagetitle map-title-v12'>
+        <div>
+          <span className='badge'>🗺️ SCHOOLVERSE MAP</span>
+          <h1>Bản đồ trường học 3D</h1>
+          <p>Chạm vào điểm sáng để xem thông tin và di chuyển.</p>
+        </div>
+        <div className='summary map-summary-v12'>
+          <span>✨ 7 khu vực</span>
+          <span>📍 Bạn đang ở Sân trường</span>
+        </div>
       </div>
 
-      <div className='mapstage mapstage-v11'>
+      <div className='mapstage mapstage-v12'>
         <img src={schoolMapImg} alt='Bản đồ 3D SchoolVerse'/>
-        <div className='map-soft-shade'/>
+        <div className='map-soft-shade-v12'/>
 
         {locations.map(l=><button
           key={l.id}
           aria-label={l.name}
           title={l.name}
-          className={'map-hotspot '+(sel.id===l.id?'active':'')}
+          className={'map-hotspot-v12 '+(sel.id===l.id?'active':'')}
           style={{left:l.x+'%',top:l.y+'%'}}
           onClick={()=>setSel(l)}>
-            <span>{l.icon}</span>
+            <span className='spot-ring'></span>
+            <span className='spot-icon'>{l.icon}</span>
         </button>)}
 
-        <div className='you-are-here' style={{left:locations[0].x+'%',top:locations[0].y+'%'}}>
-          <span>👦</span><b>Bạn đang ở đây</b>
+        <div className='you-are-here-v12' style={{left:locations[0].x+'%',top:locations[0].y+'%'}}>
+          <span className='you-avatar'>👦</span>
+          <b>Bạn đang ở đây</b>
         </div>
 
-        <div className='mapinfo glass mapinfo-v11'>
-          <span className='badge'>📍 ĐANG CHỌN</span>
-          <div className='mapinfo-head'><div className='bigicon'>{sel.icon}</div><div><h2>{sel.name}</h2><small>{sel.sub}</small></div></div>
+        <div className='mapinfo glass mapinfo-v12'>
+          <div className='mapinfo-top-v12'>
+            <span className='badge'>📍 KHU VỰC ĐANG CHỌN</span>
+            <span className='map-index'>{locations.findIndex(x=>x.id===sel.id)+1}/7</span>
+          </div>
+          <div className='mapinfo-head-v12'>
+            <div className='bigicon'>{sel.icon}</div>
+            <div>
+              <h2>{sel.name}</h2>
+              <small>{sel.sub}</small>
+            </div>
+          </div>
           <p>{sel.desc}</p>
-          <button className='primary compact' disabled={!sel.route} onClick={()=>sel.route&&nav(sel.route)}>
-            {sel.route?'Đi đến khu vực →':'Sắp mở khóa'}
-          </button>
+          <div className='mapinfo-actions-v12'>
+            <button className='primary compact' disabled={!sel.route} onClick={()=>sel.route&&nav(sel.route)}>
+              {sel.route?'Đi đến khu vực →':'Sắp mở khóa'}
+            </button>
+            <button className='soft map-center-btn' onClick={()=>setSel(locations[0])}>🎯 Về Sân trường</button>
+          </div>
+        </div>
+
+        <div className='map-legend-v12 glass'>
+          <span><i className='legend-dot current'></i> Đang chọn</span>
+          <span><i className='legend-dot here'></i> Vị trí của bạn</span>
         </div>
       </div>
     </section></Shell>}

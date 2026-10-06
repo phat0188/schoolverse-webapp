@@ -1,14 +1,22 @@
-# SchoolVerse V1.1.1 – HD Campus
+# SchoolVerse V1.2 – Map Clean & Interaction
 
-Bản này giữ nguyên giao diện V1.1 Clean UI nhưng nâng chất lượng ảnh sân trường.
+Phiên bản này giữ nguyên V1.1.1 HD Campus và nâng cấp riêng màn hình bản đồ.
 
 ## Thay đổi
-- Ảnh campus tăng lên 2560 px chiều ngang
-- WebP quality 97
-- sharpen nhẹ để hiển thị tốt trên màn hình Full HD/2K
-- bỏ filter CSS làm ảnh mềm
-- giữ nguyên toàn bộ HUD, menu, nhiệm vụ, minimap và Map Clean
+- Hotspot nhỏ, gọn, không che kiến trúc
+- Hiệu ứng pulse khi chọn
+- Nhãn "Bạn đang ở đây"
+- Panel thông tin khu vực gọn hơn
+- Route Khu lớp học đi đúng vào `/classroom`
+- Nút "Về Sân trường"
+- Chú giải trạng thái
+- Khóa tỉ lệ bản đồ desktop để hotspot ổn định hơn
+- Responsive mobile/tablet tốt hơn
 
 ## Cập nhật
-Upload toàn bộ file lên GitHub để ghi đè bản cũ rồi Commit changes.
-Vercel sẽ tự deploy lại.
+1. Giải nén ZIP
+2. Upload toàn bộ file lên GitHub
+3. Commit changes
+4. Vercel tự deploy lại
+
+Demo: HS001 / 123456
