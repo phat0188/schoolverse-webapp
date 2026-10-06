@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolVerse Physics Lab – Detailed True 3D V2</title>
+<style>
+:root{
+ --blue:#177ff3;--blue2:#41a7ff;--navy:#133b6d;--ink:#173b6d;--muted:#7187a0;
+ --green:#2abb70;--orange:#ff9428;--red:#ef6258;--panel:rgba(255,255,255,.96);--line:#dce8f4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;font-family:Inter,Segoe UI,Arial,sans-serif;background:#edf6ff;color:var(--ink)}
+button,input,select{font:inherit} button{border:0;cursor:pointer}
+.app{height:100vh;display:grid;grid-template-rows:62px 1fr}
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 14px;background:#fff;border-bottom:1px solid #e1eaf3;box-shadow:0 6px 18px rgba(20,55,95,.06);z-index:30}
+.brand{display:flex;align-items:center;gap:9px}.mark{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#46aeff,#1775e8);font-weight:1000}
+.brand b{font-size:20px}.brand b span{color:#ff8f2d}.brand small{display:block;font-size:7px;letter-spacing:1.7px;color:#8ca1ba;font-weight:900}
+.crumb{padding:8px 14px;border-radius:16px;background:#f5f9fd;border:1px solid #e4edf7;font-size:11px;font-weight:900;white-space:nowrap}
+.profile{justify-self:end;display:flex;align-items:center;gap:8px}.face{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#edf6ff;font-size:21px}.profile b,.profile small{display:block}.profile b{font-size:11px}.profile small{font-size:8px;color:var(--muted)}
+.main{display:grid;grid-template-columns:78px 1fr;min-height:0}
+.nav{background:linear-gradient(180deg,#0d477f,#103762);padding:8px 5px;display:grid;align-content:start;gap:4px}
+.nav button{height:51px;border-radius:13px;background:transparent;color:#fff;font-size:19px}.nav button small{display:block;font-size:6px;margin-top:2px;font-weight:900}.nav button.active{background:linear-gradient(180deg,#3198ff,#1778e9)}
+.scene{position:relative;overflow:hidden;background:linear-gradient(180deg,#dceefe,#bad7eb)}
+.header{position:absolute;left:10px;right:10px;top:9px;height:66px;z-index:7;display:grid;grid-template-columns:1fr auto;gap:9px}
+.title,.stats{background:var(--panel);backdrop-filter:blur(10px);border-radius:18px;box-shadow:0 14px 30px rgba(16,48,86,.12)}
+.title{display:flex;align-items:center;gap:10px;padding:8px 12px}.title .icon{width:45px;height:45px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#3fa8ff,#1773e7);color:#fff;font-size:24px}
+.title h1{margin:0;font-size:19px}.title p{margin:2px 0 0;font-size:8px;color:var(--muted)}
+.stats{display:flex;gap:4px;padding:6px}.stat{min-width:78px;text-align:center;padding:6px;border-radius:10px;background:#f7fbff}.stat b,.stat small{display:block}.stat b{font-size:11px}.stat small{font-size:6px;color:var(--muted);font-weight:900}
+.workspace{position:absolute;left:10px;right:10px;top:84px;bottom:10px;z-index:5;display:grid;grid-template-columns:250px minmax(0,1fr) 325px;gap:9px;min-height:0}
+.catalog,.right{background:var(--panel);border-radius:19px;box-shadow:0 18px 40px rgba(15,48,86,.14)}
+.catalog{padding:10px;overflow:auto}.catalog h3{margin:0 0 8px;font-size:12px}.expList{display:grid;gap:6px}
+.exp{display:grid;grid-template-columns:34px 1fr;gap:7px;align-items:center;padding:8px;border-radius:12px;background:#f7fbff;border:1px solid #e1ebf4;text-align:left;color:var(--ink)}
+.exp.active{background:#e9f5ff;border-color:#64aefa;box-shadow:0 7px 16px rgba(23,126,243,.12)}
+.exp span{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;font-size:19px}.exp b,.exp small{display:block}.exp b{font-size:9px}.exp small{font-size:7px;color:var(--muted);margin-top:2px}
+.sim{display:grid;grid-template-rows:1fr auto;gap:7px;min-height:0}
+.viewport{position:relative;overflow:hidden;border-radius:21px;background:linear-gradient(180deg,#f9fcff,#d9ebf8);box-shadow:0 20px 45px rgba(14,48,86,.17);border:1px solid rgba(255,255,255,.9)}
+#stage3d{position:absolute;inset:0}#stage3d canvas{display:block;width:100%!important;height:100%!important}
+.badge{position:absolute;left:12px;top:11px;z-index:4;padding:6px 8px;border-radius:999px;background:rgba(234,245,255,.94);color:#176fdc;font-size:7px;font-weight:900}
+.tip{position:absolute;right:12px;top:11px;z-index:4;padding:6px 8px;border-radius:999px;background:rgba(255,246,220,.96);color:#97650f;font-size:7px;font-weight:900;max-width:48%}
+.readout{position:absolute;right:12px;bottom:11px;z-index:4;width:278px;padding:9px;border-radius:15px;background:rgba(255,255,255,.94);border:1px solid #dce8f4;box-shadow:0 11px 24px rgba(15,48,86,.11)}
+.readout h4{margin:0 0 6px;font-size:9px}.readgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.readcell{padding:6px;border-radius:9px;background:#f5f9fd;text-align:center}.readcell small,.readcell b{display:block}.readcell small{font-size:5px;color:var(--muted);font-weight:900}.readcell b{font:1000 11px Consolas,monospace;margin-top:2px}
+.controls{display:flex;gap:7px;align-items:end;flex-wrap:wrap;padding:8px 9px;border-radius:17px;background:var(--panel);box-shadow:0 14px 32px rgba(15,48,86,.13)}
+.controls .group{min-width:150px;flex:1}.controls label{display:block;font-size:7px;color:var(--muted);font-weight:900;margin-bottom:3px}.controls input[type=range]{width:100%;accent-color:var(--blue)}.controls select{height:38px;border:1px solid #d8e5f1;border-radius:10px;padding:0 8px;background:#fff;color:var(--ink);font-size:9px;width:100%}
+.btn{height:39px;padding:0 11px;border-radius:11px;font-weight:900;font-size:9px}.primary{background:linear-gradient(180deg,#3198ff,#1778e8);color:white}.secondary{background:#edf5fc;color:#176fdc;border:1px solid #d8e6f3}.warn{background:#fff2df;color:#a86811;border:1px solid #f5d5a6}
+.right{padding:10px;display:grid;grid-template-rows:auto auto 1fr;gap:8px;min-height:0}
+.mission,.panel{border:1px solid #e0eaf4;border-radius:14px;padding:10px;background:#fbfdff}.tag{display:inline-flex;padding:5px 7px;border-radius:999px;background:#eaf5ff;color:#176fdc;font-size:7px;font-weight:900}.mission h3{margin:7px 0 4px;font-size:13px}.mission p{margin:0;color:var(--muted);font-size:8px;line-height:1.4}
+.panel h4{margin:0 0 7px;font-size:10px}.status{font-size:8px;line-height:1.5;color:#48617b}.status b{color:var(--ink)}
+.log{overflow:auto}.log table{width:100%;border-collapse:collapse;font-size:7px}.log th,.log td{padding:5px 3px;border-bottom:1px solid #e7eef6;text-align:center}.log th{position:sticky;top:0;background:#fbfdff;color:#6b8099}
+.loading{position:absolute;inset:0;display:grid;place-items:center;background:#e9f5ff;color:#315273;font-weight:900;z-index:10}
+.loading.hide{display:none}
+@media(max-width:1200px){.workspace{grid-template-columns:215px minmax(0,1fr) 285px}.readout{width:235px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="brand"><div class="mark">S</div><div><b>School<span>Verse</span></b><small>LEARN • PLAY • GROW</small></div></div>
+ <div class="crumb">⚛️ Phòng Vật lý 3D › <b id="crumbName">Khảo sát lực ma sát</b></div>
+ <div class="profile"><div class="face">👦</div><div><b>Nguyễn Minh Anh</b><small>Lớp 7A2 • Lv.12</small></div></div>
+</header>
+<div class="main">
+<nav class="nav">
+ <button>🏠<small>Sân trường</small></button><button>🎯<small>Nhiệm vụ</small></button><button>🗺️<small>Bản đồ</small></button><button>🧪<small>Thực hành</small></button><button class="active">⚛️<small>Vật lý</small></button><button>🏆<small>Hồ sơ</small></button>
+</nav>
+<section class="scene">
+ <div class="header">
+   <div class="title"><div class="icon" id="titleIcon">🧱</div><div><h1 id="titleText">Khảo sát lực ma sát 3D</h1><p id="titleSub">Kéo vật trực tiếp • thay đổi bề mặt • đọc lực kế</p></div></div>
+   <div class="stats"><div class="stat"><b>+50 XP</b><small>PHẦN THƯỞNG</small></div><div class="stat"><b id="trial">0</b><small>LẦN THỬ</small></div><div class="stat"><b id="score">--</b><small>KẾT QUẢ</small></div></div>
+ </div>
+
+ <div class="workspace">
+   <aside class="catalog">
+     <h3>🧪 Thí nghiệm 3D chi tiết</h3>
+     <div class="expList" id="expList"></div>
+   </aside>
+
+   <div class="sim">
+     <div class="viewport">
+       <div id="stage3d"></div><div class="loading" id="loading">Đang khởi tạo phòng thí nghiệm 3D…</div>
+       <div class="badge">🧊 TRUE 3D • WEBGL • DETAILED</div><div class="tip" id="tip">🖱️ Kéo vật thể trực tiếp • Kéo nền để xoay • Cuộn để zoom</div>
+       <div class="readout"><h4 id="readTitle">📟 Số liệu đo</h4><div class="readgrid" id="readGrid"></div></div>
+     </div>
+     <div class="controls" id="controls"></div>
+   </div>
+
+   <aside class="right">
+     <div class="mission"><span class="tag">🎯 NHIỆM VỤ THỰC HÀNH</span><h3 id="missionTitle"></h3><p id="missionText"></p></div>
+     <div class="panel"><h4>🔬 Trạng thái thí nghiệm</h4><div class="status" id="status"></div></div>
+     <div class="panel log"><h4>📊 Nhật ký số liệu</h4><div id="log"></div></div>
+   </aside>
+ </div>
+</section>
+</div>
+</div>
+
+<script type="module">
+const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm');
+const {OrbitControls}=await import('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js/+esm');
+
+const EXPERIMENTS=[
+ {id:'friction',icon:'🧱',name:'Khảo sát lực ma sát',sub:'Kéo vật • đổi bề mặt • lực kế'},
+ {id:'reflection',icon:'🔦',name:'Phản xạ ánh sáng',sub:'Thước độ • pháp tuyến • gương'},
+ {id:'circuit',icon:'💡',name:'Mạch điện 3D',sub:'Pin • công tắc • điện trở • đồng hồ'},
+ {id:'sound',icon:'🔊',name:'Khảo sát sóng âm',sub:'Tần số • biên độ • micro'},
+ {id:'heat',icon:'🌡️',name:'Truyền nhiệt',sub:'Nhiệt kế • cốc nước • cân bằng nhiệt'},
+ {id:'lever',icon:'⚖️',name:'Khảo sát đòn bẩy',sub:'Điểm tựa • quả cân • vạch chia'},
+ {id:'magnet',icon:'🧲',name:'Nam châm điện',sub:'Số vòng • dòng điện • kẹp giấy'},
+ {id:'buoyancy',icon:'🛟',name:'Lực đẩy Ác-si-mét',sub:'Lực kế • bình nước • vật nhúng'},
+ {id:'density',icon:'🧊',name:'Đo khối lượng riêng',sub:'Cân • bình chia độ • vật mẫu'}
+];
+
+const expList=document.getElementById('expList');
+expList.innerHTML=EXPERIMENTS.map((e,i)=>`<button class="exp ${i===0?'active':''}" data-id="${e.id}"><span>${e.icon}</span><div><b>${e.name}</b><small>${e.sub}</small></div></button>`).join('');
+
+const mount=document.getElementById('stage3d'),loading=document.getElementById('loading');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xeaf6ff);scene.fog=new THREE.Fog(0xeaf6ff,18,34);
+const camera=new THREE.PerspectiveCamera(42,1,.1,120);camera.position.set(9,6.8,10.5);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;mount.appendChild(renderer.domElement);
+const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,.8,0);orbit.minDistance=6;orbit.maxDistance=24;orbit.maxPolarAngle=Math.PI*.49;
+scene.add(new THREE.HemisphereLight(0xffffff,0x67839b,2.0));
+const sun=new THREE.DirectionalLight(0xffffff,2.6);sun.position.set(6,10,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(36,26),new THREE.MeshStandardMaterial({color:0xd0dee8,roughness:.85}));floor.rotation.x=-Math.PI/2;floor.position.y=-1;floor.receiveShadow=true;scene.add(floor);
+const grid=new THREE.GridHelper(34,34,0xa5bbcd,0xc7d5df);grid.position.y=-.99;scene.add(grid);
+const root=new THREE.Group();scene.add(root);
+
+const state={draggable:[],dragging:null,current:'friction',trialCount:0,logs:[],logHeaders:[],cleanup:null,update:null,runTimer:null};
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),hit=new THREE.Vector3();
+
+function setMeta(icon,title,sub,mission,text,tip='🖱️ Kéo vật thể trực tiếp • Kéo nền để xoay • Cuộn để zoom'){
+ document.getElementById('titleIcon').textContent=icon;
+ document.getElementById('titleText').textContent=title;
+ document.getElementById('titleSub').textContent=sub;
+ document.getElementById('crumbName').textContent=title.replace(' 3D','');
+ document.getElementById('missionTitle').textContent=mission;
+ document.getElementById('missionText').textContent=text;
+ document.getElementById('tip').textContent=tip;
+}
+function setRead(title,items){
+  document.getElementById('readTitle').textContent=title;
+  document.getElementById('readGrid').innerHTML=items.map(x=>`<div class="readcell"><small>${x[0]}</small><b id="${x[2]}">${x[1]}</b></div>`).join('');
+}
+function setStatus(html){document.getElementById('status').innerHTML=html}
+function setControls(html){document.getElementById('controls').innerHTML=html}
+function setLogHeaders(headers){state.logHeaders=headers; renderLog();}
+function logRow(vals){state.logs.push(vals); state.trialCount++; document.getElementById('trial').textContent=state.trialCount; renderLog();}
+function renderLog(){
+  const el=document.getElementById('log');
+  if(!state.logs.length){el.innerHTML='<div style="font-size:8px;color:#8da1b8;text-align:center;padding:18px">Chưa có số liệu.</div>'; return;}
+  const head='<tr><th>Lần</th>'+state.logHeaders.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  const body=state.logs.map((r,i)=>'<tr><td>'+(i+1)+'</td>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('');
+  el.innerHTML='<table><thead>'+head+'</thead><tbody>'+body+'</tbody></table>';
+}
+function mat(c,m=.15,r=.45){return new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r})}
+function box(w,h,d,c,m=.15,r=.45){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c,m,r));mesh.castShadow=mesh.receiveShadow=true;return mesh}
+function cyl(rt,rb,h,c,m=.15,r=.45){const mesh=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,32),mat(c,m,r));mesh.castShadow=mesh.receiveShadow=true;return mesh}
+function sphere(r,c,m=.15,rough=.45){const s=new THREE.Mesh(new THREE.SphereGeometry(r,28,18),mat(c,m,rough));s.castShadow=s.receiveShadow=true;return s}
+function makeLabel(text,w=256,h=128,bg='#ffffff',fg='#163d6b',font='900 58px Arial'){
+  const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,w,h); ctx.fillStyle=fg; ctx.font=font; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,w/2,h/2);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(w/240,h/240),new THREE.MeshBasicMaterial({map:tex,transparent:true}));
+}
+function addRuler(length=10,y=.02,z=0,color=0xf5c532,marks=20){
+  const g=new THREE.Group(); const body=new THREE.Mesh(new THREE.BoxGeometry(length,.035,.24),mat(color,.05,.6)); body.position.set(0,y,z); g.add(body);
+  for(let i=0;i<=marks;i++){ const h=i%5===0?.17:.1; const tick=box(.015,.04,h,0x173b6d,.05,.7); tick.position.set(-length/2 + i*(length/marks), y+.03, z); g.add(tick);}
+  return g;
+}
+function addTable(width=13,depth=5){
+  const top=box(width,.35,depth,0x7896ad,.1,.5); top.position.y=-.65; root.add(top);
+  for(const x of [-width/2+.6,width/2-.6]) for(const z of [-depth/2+.6,depth/2-.6]){
+    const l=box(.32,1.6,.32,0x40576a,.4,.35); l.position.set(x,-1.45,z); root.add(l);
+  }
+}
+function addGraduatedCylinder(x=0,z=0,height=3.8,r=1.1){
+  const g=new THREE.Group();
+  const glass=new THREE.Mesh(new THREE.CylinderGeometry(r, r*0.92, height, 32, 1, true), new THREE.MeshStandardMaterial({color:0xaadfff,transparent:true,opacity:.28,roughness:.08,metalness:.02,side:THREE.DoubleSide}));
+  glass.position.y=height/2-.2; g.add(glass);
+  const base=box(r*2.4,.12,r*2.4,0xced7de,.15,.55); base.position.y=-.2; g.add(base);
+  for(let i=0;i<=10;i++){
+    const tick=box(.02,.02,i%5===0?.55:.32,0x24507a,.05,.7); tick.position.set(r+.08, i*(height-0.3)/10+.05, 0); g.add(tick);
+  }
+  g.position.set(x,0,z); root.add(g); return g;
+}
+function addSpringLine(a,b,color=0xd94b42){
+  const line=new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color}));
+  root.add(line);
+  line.userData.set = () => line.geometry.setFromPoints([a(), b()]);
+  line.userData.set();
+  return line;
+}
+function addDrag(obj,axis='x',min=-5,max=5,onDrag=null){
+  obj.userData.draggable=true; obj.userData.axis=axis; obj.userData.min=min; obj.userData.max=max; obj.userData.onDrag=onDrag;
+  state.draggable.push(obj); return obj;
+}
+function clearState(){
+  if(state.cleanup) try{ state.cleanup(); }catch(e){}
+  if(state.runTimer) { clearInterval(state.runTimer); state.runTimer=null; }
+  state.update=null; state.cleanup=null; state.logs=[]; state.logHeaders=[]; state.trialCount=0;
+  document.getElementById('trial').textContent='0'; document.getElementById('score').textContent='--';
+  while(root.children.length){
+    const c=root.children.pop();
+    c.traverse?.(o=>{
+      if(o.geometry) o.geometry.dispose?.();
+      if(o.material){ if(Array.isArray(o.material)) o.material.forEach(m=>m.dispose?.()); else o.material.dispose?.(); }
+      if(o.texture) o.texture.dispose?.();
+    });
+  }
+  renderLog();
+}
+function resetCamera(pos=[9,6.8,10.5],target=[0,.8,0]){
+  camera.position.set(...pos); orbit.target.set(...target); orbit.update();
+}
+function findDrag(o){ while(o&&o!==root){ if(o.userData?.draggable) return o; o=o.parent; } return null; }
+renderer.domElement.addEventListener('pointerdown',e=>{
+  const r=renderer.domElement.getBoundingClientRect();
+  pointer.x=((e.clientX-r.left)/r.width)*2-1; pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  const hits=raycaster.intersectObjects(state.draggable,true);
+  if(hits.length){
+    state.dragging=findDrag(hits[0].object); orbit.enabled=false;
+    renderer.domElement.setPointerCapture(e.pointerId);
+  }
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+  if(!state.dragging) return;
+  const r=renderer.domElement.getBoundingClientRect();
+  pointer.x=((e.clientX-r.left)/r.width)*2-1; pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  const plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+  if(raycaster.ray.intersectPlane(plane,hit)){
+    const p=root.worldToLocal(hit.clone()), d=state.dragging;
+    if(d.userData.axis==='x') d.position.x = THREE.MathUtils.clamp(p.x, d.userData.min, d.userData.max);
+    if(d.userData.axis==='y') d.position.y = THREE.MathUtils.clamp(p.y, d.userData.min, d.userData.max);
+    if(d.userData.axis==='z') d.position.z = THREE.MathUtils.clamp(p.z, d.userData.min, d.userData.max);
+    if(d.userData.onDrag) d.userData.onDrag(d);
+  }
+});
+function endDrag(e){ if(state.dragging){ state.dragging=null; orbit.enabled=true; try{renderer.domElement.releasePointerCapture(e.pointerId)}catch{}}}
+renderer.domElement.addEventListener('pointerup',endDrag); renderer.domElement.addEventListener('pointercancel',endDrag);
+
+function buildFriction(){
+  clearState(); addTable(13,5); setLogHeaders(['Bề mặt','Khối lượng','Lực kéo']);
+  setMeta('🧱','Khảo sát lực ma sát 3D','Lực kế lò xo • vạch chia • bề mặt rõ ràng','So sánh lực ma sát trên các bề mặt','Kéo khối gỗ trên 3 bề mặt khác nhau. Ghi số chỉ lực kế khi vật chuyển động đều.');
+  setRead('📟 Lực kế ma sát',[['BỀ MẶT','Nhẵn','r1'],['LỰC KÉO','0.00 N','r2'],['QUÃNG DỊCH','0.00 m','r3']]);
+  setControls(`
+    <div class="group"><label>Bề mặt</label><select id="surface"><option value=".18">Nhẵn</option><option value=".32">Gỗ</option><option value=".48">Nhám</option></select></div>
+    <div class="group"><label>Khối lượng vật</label><input id="mass" type="range" min=".2" max="1.5" step=".1" value=".8"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const track=box(10,.15,2.8,0xcfd9e1,.08,.78); track.position.y=-.28; root.add(track);
+  const ruler=addRuler(10,.06,1.2,0xf5c532,20); root.add(ruler);
+  const dyno=box(2.6,.45,.55,0x2d4b63,.15,.45); dyno.position.set(4.6,.28,0); root.add(dyno);
+  const tube=box(2.2,.18,.18,0xe7eef5,.02,.75); tube.position.set(4.45,.35,0); root.add(tube);
+  const hook=box(.12,.12,.4,0x78899a,.5,.3); hook.position.set(3.2,.25,0); root.add(hook);
+  for(let i=0;i<=10;i++){ const tick=box(.015,.05,i%5===0?.12:.08,0x173b6d,.05,.7); tick.position.set(3.55+i*.18,.47,0); root.add(tick); }
+  const pointer=box(.06,.08,.12,0xff4f45,.05,.6); pointer.position.set(3.62,.35,0); root.add(pointer);
+  const block=addDrag(box(1.2,.72,1.0,0xbe7a36,.15,.62),'x',-4.2,2.2,update); block.position.set(-3.4,.1,0); root.add(block);
+  const line = addSpringLine(()=>new THREE.Vector3(block.position.x+.68,.38,0), ()=>new THREE.Vector3(3.18,.26,0));
+  function updateSurface(){
+    const i=document.getElementById('surface').selectedIndex;
+    const cols=[0xcfd9e1,0xb3885f,0x83684e];
+    track.material.color.setHex(cols[i]);
+    track.material.roughness=[.78,.65,.92][i];
+  }
+  function update(){
+    updateSurface();
+    const mu=+document.getElementById('surface').value, m=+document.getElementById('mass').value;
+    const F=mu*m*9.81;
+    document.getElementById('r1').textContent=document.getElementById('surface').selectedOptions[0].text;
+    document.getElementById('r2').textContent=F.toFixed(2)+' N';
+    document.getElementById('r3').textContent=((block.position.x+4.2)*.2).toFixed(2)+' m';
+    pointer.position.x=3.62+Math.min(1.7,F/8);
+    line.userData.set();
+    setStatus(`<b>Hệ số ma sát:</b> ${mu.toFixed(2)}<br><b>Khối lượng vật:</b> ${m.toFixed(1)} kg<br><b>Giải thích:</b> Bề mặt càng nhám thì lực kéo để vật chuyển động đều càng lớn.`);
+  }
+  document.getElementById('surface').onchange=update;
+  document.getElementById('mass').oninput=update;
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,(+document.getElementById('mass').value).toFixed(1)+' kg',document.getElementById('r2').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([8.5,6.5,10],[0,.7,0]);
+  resetCamera([8.5,6.5,10],[0,.7,0]); update();
+}
+
+function buildReflection(){
+  clearState(); addTable(13,5); setLogHeaders(['Góc tới','Góc phản xạ','Góc gương']);
+  setMeta('🔦','Phản xạ ánh sáng 3D','Thước đo độ • pháp tuyến • mặt gương • tia tới/phản xạ','Kiểm chứng định luật phản xạ','Xoay mặt gương, quan sát đường pháp tuyến, thước đo độ và so sánh góc tới với góc phản xạ.');
+  setRead('📟 Góc phản xạ',[['GÓC TỚI','30°','r1'],['GÓC PX','30°','r2'],['GƯƠNG','0°','r3']]);
+  setControls(`
+    <div class="group"><label>Góc gương</label><input id="mirrorAngle" type="range" min="-40" max="40" value="0"></div>
+    <div class="group"><label>Góc tia tới</label><input id="incAngle" type="range" min="10" max="70" value="30"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const bench=box(8,.12,8,0xdbe5ed,.06,.82); bench.position.y=-.32; root.add(bench);
+  const pro = new THREE.Group();
+  const disk = new THREE.Mesh(new THREE.CylinderGeometry(2.8,2.8,.05,64), mat(0xfbf2cf,.05,.82)); disk.position.set(0,-.22,0); pro.add(disk);
+  for(let a=0;a<180;a+=5){
+    const len=a%10===0?.35:.2;
+    const tick=box(.03,.06,len,0x173b6d,.05,.72);
+    const rad=THREE.MathUtils.degToRad(a);
+    tick.position.set(Math.cos(rad)*2.55,-.16,Math.sin(rad)*2.55);
+    tick.lookAt(0,-.16,0); pro.add(tick);
+    if(a<180 && a%30===0){
+      const label = makeLabel(String(a),128,64,'rgba(255,255,255,0)',' #173b6d'.trim(),'900 42px Arial');
+      label.position.set(Math.cos(rad)*2.05,.01,Math.sin(rad)*2.05);
+      label.rotation.x=-Math.PI/2; label.rotation.z=-rad+Math.PI/2; pro.add(label);
+    }
+  }
+  root.add(pro);
+  const normal=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-.15,0),new THREE.Vector3(0,1.6,0)]), new THREE.LineDashedMaterial({color:0x2074d9,dashSize:.12,gapSize:.08}));
+  normal.computeLineDistances(); root.add(normal);
+  const mirror=new THREE.Mesh(new THREE.BoxGeometry(.08,2.3,3.0), new THREE.MeshStandardMaterial({color:0xb7d4e7,metalness:.95,roughness:.03}));
+  mirror.position.set(0,0.85,0); root.add(mirror);
+  const mirrorBase=box(1.4,.18,1.1,0x496680,.4,.32); mirrorBase.position.set(0,-.08,0); root.add(mirrorBase);
+  const source=box(1.2,.5,.6,0x314452,.3,.35); source.position.set(-3.6,.35,0); root.add(source);
+  const aperture=box(.16,.16,.16,0xff4d4d,.05,.55); aperture.position.set(-3.0,.4,0); root.add(aperture);
+  const inLine=new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color:0xff2d2d}));
+  const outLine=new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color:0xff2d2d}));
+  root.add(inLine,outLine);
+  function update(){
+    const ma=+document.getElementById('mirrorAngle').value;
+    const ia=+document.getElementById('incAngle').value;
+    mirror.rotation.y=THREE.MathUtils.degToRad(ma);
+    const hit=new THREE.Vector3(0,.4,0);
+    const srcDir = new THREE.Vector3(-Math.cos(THREE.MathUtils.degToRad(ia)),0,Math.sin(THREE.MathUtils.degToRad(ia))).normalize();
+    const src=hit.clone().add(srcDir.clone().multiplyScalar(3.2));
+    inLine.geometry.setFromPoints([src,hit]);
+    const n = new THREE.Vector3(Math.cos(THREE.MathUtils.degToRad(ma)),0,Math.sin(THREE.MathUtils.degToRad(ma))).normalize();
+    const I = hit.clone().sub(src).normalize();
+    const R = I.clone().reflect(n).normalize();
+    const end = hit.clone().add(R.multiplyScalar(4.2));
+    outLine.geometry.setFromPoints([hit,end]);
+    const theta = Math.abs(THREE.MathUtils.radToDeg(Math.acos(Math.min(1,Math.abs(I.dot(n)))))-90);
+    document.getElementById('r1').textContent=theta.toFixed(0)+'°';
+    document.getElementById('r2').textContent=theta.toFixed(0)+'°';
+    document.getElementById('r3').textContent=ma+'°';
+    setStatus(`<b>Đường pháp tuyến:</b> đường vuông góc với mặt gương tại điểm tới.<br><b>Định luật phản xạ:</b> góc tới = góc phản xạ = ${theta.toFixed(0)}°.<br><b>Mặt gương:</b> xoay ${ma}° so với vị trí chuẩn.`);
+  }
+  document.getElementById('mirrorAngle').oninput=update;
+  document.getElementById('incAngle').oninput=update;
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Chuẩn';}
+  document.getElementById('cam').onclick=()=>resetCamera([8,6.5,8.5],[0,.5,0]);
+  resetCamera([8,6.5,8.5],[0,.5,0]); update();
+}
+
+function buildCircuit(){
+  clearState(); addTable(13,5); setLogHeaders(['U nguồn','R điện trở','I mạch','P đèn']);
+  setMeta('💡','Mạch điện 3D','Pin • công tắc • bóng đèn • điện trở • ampe kế • vôn kế','Quan sát mạch nối tiếp trực quan','Thay đổi điện áp nguồn và điện trở, đóng/mở công tắc để quan sát độ sáng của bóng đèn và số chỉ đồng hồ.');
+  setRead('📟 Đồng hồ điện',[['ĐIỆN ÁP','6.0 V','r1'],['DÒNG ĐIỆN','0.00 A','r2'],['CÔNG SUẤT','0.00 W','r3']]);
+  setControls(`
+    <div class="group"><label>Điện áp nguồn</label><input id="voltage" type="range" min="1.5" max="9" step="1.5" value="6"></div>
+    <div class="group"><label>Điện trở biến trở</label><input id="resistance" type="range" min="2" max="20" step="1" value="8"></div>
+    <button class="btn primary" id="switchBtn">⚡ Đóng công tắc</button><button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const board=box(11,.14,4.4,0xe0b67b,.05,.78); board.position.y=-.3; root.add(board);
+
+  const battery = new THREE.Group();
+  const bat1 = box(.8,1.6,.8,0x1b1f26,.25,.38); bat1.position.x=-.55; battery.add(bat1);
+  const bat2 = box(.8,1.2,.8,0xcad5df,.15,.45); bat2.position.x=.45; battery.add(bat2);
+  const p1=box(.08,.22,.08,0xd5403a,.2,.4); p1.position.set(-.55,.95,0); battery.add(p1);
+  const p2=box(.08,.22,.08,0x313131,.2,.4); p2.position.set(.45,.75,0); battery.add(p2);
+  battery.position.set(-4,.55,-1.2); root.add(battery);
+
+  const switchBase=box(1.5,.2,.9,0x66737d,.25,.42); switchBase.position.set(-1.2,-.1,1.2); root.add(switchBase);
+  const lever=box(1.0,.1,.22,0x243543,.35,.28); lever.position.set(-1.2,.1,1.0); root.add(lever);
+
+  const resistorBase=box(1.8,.18,.7,0xddd5c7,.12,.6); resistorBase.position.set(1.8,-.12,1.2); root.add(resistorBase);
+  const resistorBody=box(1.0,.36,.36,0xe3c277,.08,.45); resistorBody.position.set(1.8,.15,1.2); root.add(resistorBody);
+  const colorBands=[];
+  [0xa23f2a,0x262626,0x2b7fb8].forEach((c,i)=>{const b=box(.08,.39,.39,c,.05,.5); b.position.set(1.45+i*.25,.15,1.2); root.add(b); colorBands.push(b);});
+
+  const bulb = new THREE.Group();
+  const base=cyl(.42,.42,.45,0x707f8d,.45,.28); bulb.add(base);
+  const glass=new THREE.Mesh(new THREE.SphereGeometry(.5,28,18), new THREE.MeshStandardMaterial({color:0xfff0aa,transparent:true,opacity:.48,emissive:0x000000,roughness:.12,metalness:.05}));
+  glass.position.y=.72; bulb.add(glass);
+  const filament=box(.18,.04,.04,0xd67f2f,.35,.22); filament.position.y=.58; bulb.add(filament);
+  bulb.position.set(4,.1,-.2); root.add(bulb);
+
+  const ammeter = new THREE.Group();
+  const aBody=cyl(.58,.58,.28,0xf8f9fb,.05,.72); aBody.rotation.x=Math.PI/2; ammeter.add(aBody);
+  const aFace = new THREE.Mesh(new THREE.CircleGeometry(.52,32), new THREE.MeshBasicMaterial({color:0xffffff})); aFace.position.z=.15; ammeter.add(aFace);
+  const aNeedle=box(.35,.03,.02,0xe44942,.02,.55); aNeedle.position.set(.15,0,.17); ammeter.add(aNeedle);
+  ammeter.position.set(-.15,.52,-1.2); root.add(ammeter);
+
+  const voltmeter = new THREE.Group();
+  const vBody=cyl(.58,.58,.28,0xf8f9fb,.05,.72); vBody.rotation.x=Math.PI/2; voltmeter.add(vBody);
+  const vFace = new THREE.Mesh(new THREE.CircleGeometry(.52,32), new THREE.MeshBasicMaterial({color:0xffffff})); vFace.position.z=.15; voltmeter.add(vFace);
+  const vNeedle=box(.35,.03,.02,0x2074d9,.02,.55); vNeedle.position.set(.15,0,.17); voltmeter.add(vNeedle);
+  voltmeter.position.set(4.95,.52,-.2); root.add(voltmeter);
+
+  const wires=[]; function addWire(points,color=0x253341){ const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({color})); root.add(line); wires.push(line); return line; }
+  addWire([new THREE.Vector3(-3.1,.7,-1.2),new THREE.Vector3(-1.9,.7,-1.2),new THREE.Vector3(-1.2,.15,1.0)]);
+  addWire([new THREE.Vector3(-1.2,.15,1.2),new THREE.Vector3(.9,.15,1.2)]);
+  addWire([new THREE.Vector3(2.7,.15,1.2),new THREE.Vector3(4,.15,1.2),new THREE.Vector3(4,.45,-.2)]);
+  addWire([new THREE.Vector3(4,.15,-.2),new THREE.Vector3(4.95,.15,-.2)]);
+  addWire([new THREE.Vector3(4,.15,-.2),new THREE.Vector3(2.2,.15,-1.2),new THREE.Vector3(0.4,.15,-1.2)]);
+  addWire([new THREE.Vector3(-.7,.15,-1.2),new THREE.Vector3(-3.55,.15,-1.2),new THREE.Vector3(-3.55,.35,-1.2)]);
+
+  let closed=false;
+  function update(){
+    const U=+document.getElementById('voltage').value;
+    const Rvar=+document.getElementById('resistance').value;
+    const Rlamp=6;
+    const I=closed ? U/(Rvar+Rlamp) : 0;
+    const P=I*I*Rlamp;
+    document.getElementById('r1').textContent=U.toFixed(1)+' V';
+    document.getElementById('r2').textContent=I.toFixed(2)+' A';
+    document.getElementById('r3').textContent=P.toFixed(2)+' W';
+    lever.rotation.z = closed ? 0 : -.55;
+    glass.material.emissive.setHex(closed ? (P>1?0xffc933:0x775511) : 0x000000);
+    glass.material.opacity = closed ? Math.min(.95,.45+P/2) : .48;
+    aNeedle.rotation.z = -0.8 + I*1.2;
+    vNeedle.rotation.z = -0.8 + U/9*1.5;
+    setStatus(`<b>Mạch:</b> ${closed?'Kín':'Hở'}<br><b>Điện áp nguồn:</b> ${U.toFixed(1)} V<br><b>Điện trở tổng:</b> ${(Rvar+Rlamp).toFixed(1)} Ω<br><b>Kết luận:</b> R tăng thì I giảm, đèn sáng yếu hơn.`);
+  }
+  document.getElementById('voltage').oninput=update;
+  document.getElementById('resistance').oninput=update;
+  document.getElementById('switchBtn').onclick=()=>{closed=!closed; document.getElementById('switchBtn').textContent=closed?'⛔ Mở công tắc':'⚡ Đóng công tắc'; update();}
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('resistance').value+' Ω',document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([10,7,10.8],[0,.4,0]);
+  resetCamera([10,7,10.8],[0,.4,0]); update();
+}
+
+function buildSound(){
+  clearState(); addTable(13,5); setLogHeaders(['Tần số','Biên độ','Mức âm','Khoảng cách']);
+  setMeta('🔊','Khảo sát sóng âm 3D','Loa • micro • vòng sóng • mức âm','Khám phá độ cao và độ to của âm','Điều chỉnh tần số, biên độ và kéo micro xa/gần nguồn âm để quan sát mức âm.');
+  setRead('📟 Phân tích âm',[['TẦN SỐ','440 Hz','r1'],['BIÊN ĐỘ','50 %','r2'],['MỨC ÂM','-- dB','r3']]);
+  setControls(`
+    <div class="group"><label>Tần số</label><input id="freq" type="range" min="100" max="1000" step="10" value="440"></div>
+    <div class="group"><label>Biên độ</label><input id="amp" type="range" min="10" max="100" value="50"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const speaker=new THREE.Group();
+  const body=cyl(1.1,1.1,.9,0x243746,.3,.35); body.rotation.z=Math.PI/2; speaker.add(body);
+  const cone=new THREE.Mesh(new THREE.ConeGeometry(.82,.55,32), mat(0x394854,.15,.42)); cone.rotation.z=-Math.PI/2; cone.position.x=.62; speaker.add(cone);
+  const center=sphere(.12,0x111920,.1,.5); center.position.x=.92; speaker.add(center);
+  speaker.position.set(-4,.35,0); root.add(speaker);
+  const mic=addDrag(new THREE.Group(),'x',-1,5,update);
+  const stem=box(.12,1.4,.12,0x637887,.4,.35); stem.position.y=.2; mic.add(stem);
+  const head=sphere(.34,0x55616a,.18,.5); head.position.y=.95; mic.add(head);
+  const base=box(.75,.08,.75,0x7d909d,.25,.42); base.position.y=-.55; mic.add(base);
+  mic.position.set(3.2,.45,0); root.add(mic);
+  const rings=[]; for(let i=0;i<7;i++){ const t=new THREE.Mesh(new THREE.TorusGeometry(.8+i*.5,.025,8,54), new THREE.MeshBasicMaterial({color:0x2c9cf5,transparent:true,opacity:.32})); t.rotation.y=Math.PI/2; t.position.set(-3+i*.55,.58,0); root.add(t); rings.push(t); }
+  function update(){
+    const f=+document.getElementById('freq').value, a=+document.getElementById('amp').value;
+    const d=Math.max(.6, mic.position.x - speaker.position.x);
+    const db=Math.max(20,50 + 20*Math.log10(a/50) - 20*Math.log10(d/3));
+    document.getElementById('r1').textContent=f+' Hz'; document.getElementById('r2').textContent=a+' %'; document.getElementById('r3').textContent=db.toFixed(1)+' dB';
+    rings.forEach((r,i)=>{ r.scale.setScalar(.65 + f/1200*.4); r.material.opacity=.1 + a/120; r.position.x=-3 + i*(.45+f/2000); });
+    setStatus(`<b>Khoảng cách micro:</b> ${d.toFixed(2)} m<br><b>Tần số:</b> âm ${f<300?'trầm':f>700?'cao':'trung bình'}.<br><b>Mức âm:</b> ${db.toFixed(1)} dB, giảm khi micro ra xa nguồn âm.`);
+  }
+  document.getElementById('freq').oninput=update; document.getElementById('amp').oninput=update;
+  document.getElementById('record').onclick=()=>{const d=(mic.position.x-speaker.position.x).toFixed(2)+' m'; logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent,d]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([9,6,10],[0,.5,0]);
+  resetCamera([9,6,10],[0,.5,0]); update();
+}
+
+function buildHeat(){
+  clearState(); addTable(13,5); setLogHeaders(['T vật','T nước','Thời gian']);
+  setMeta('🌡️','Truyền nhiệt 3D','Vật nóng • cốc nước • nhiệt kế rõ ràng','Quan sát cân bằng nhiệt','Nhúng vật nóng vào cốc nước và theo dõi hai nhiệt kế tiến dần đến cùng một nhiệt độ.');
+  setRead('📟 Nhiệt kế',[['VẬT NÓNG','80.0 °C','r1'],['NƯỚC','25.0 °C','r2'],['THỜI GIAN','0 s','r3']]);
+  setControls(`
+    <div class="group"><label>Nhiệt độ đầu vật</label><input id="hot" type="range" min="40" max="100" value="80"></div>
+    <div class="group"><label>Khối lượng nước</label><input id="waterMass" type="range" min=".2" max="1" step=".1" value=".5"></div>
+    <button class="btn primary" id="startHeat">▶ Mô phỏng</button><button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const stand=box(.22,3.2,.22,0x627787,.45,.38); stand.position.set(-2.9,.65,0); root.add(stand);
+  const hanger=box(1.5,.08,.08,0x627787,.45,.38); hanger.position.set(-2.2,2.05,0); root.add(hanger);
+  const beaker=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.0,2.4,32,1,true), new THREE.MeshStandardMaterial({color:0x9fd8ff,transparent:true,opacity:.32,roughness:.1,metalness:.02,side:THREE.DoubleSide}));
+  beaker.position.set(1,.95,0); root.add(beaker);
+  const water=cyl(1.0,1.0,1.55,0x46b9f5,.05,.55); water.material.transparent=true; water.material.opacity=.52; water.position.set(1,.15,0); root.add(water);
+  const hot=addDrag(box(.85,.85,.85,0xe95a42,.1,.52),'y',.25,2.6,update); hot.position.set(1,2.2,0); root.add(hot);
+  const string=new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color:0x444f59})); root.add(string);
+  const thermo1=box(.12,2.0,.12,0xf7f9fc,.05,.68); thermo1.position.set(2.2,.65,0); root.add(thermo1); const merc1=box(.05,.8,.05,0xe54e49,.05,.62); merc1.position.set(2.2,.05,0); root.add(merc1);
+  const thermo2=box(.12,2.0,.12,0xf7f9fc,.05,.68); thermo2.position.set(-.2,.65,0); root.add(thermo2); const merc2=box(.05,.8,.05,0x1da0f2,.05,.62); merc2.position.set(-.2,.05,0); root.add(merc2);
+  let t=0,Th=80,Tw=25;
+  function resetVals(){ Th=+document.getElementById('hot').value; Tw=25; t=0; update(); }
+  function update(){
+    string.geometry.setFromPoints([new THREE.Vector3(-2.2,2.01,0), new THREE.Vector3(1, hot.position.y+.45, 0)]);
+    const frac1=(Th-20)/80, frac2=(Tw-20)/80;
+    merc1.scale.y=Math.max(.08,frac1); merc1.position.y=-.7 + frac1*.8;
+    merc2.scale.y=Math.max(.08,frac2); merc2.position.y=-.7 + frac2*.8;
+    document.getElementById('r1').textContent=Th.toFixed(1)+' °C'; document.getElementById('r2').textContent=Tw.toFixed(1)+' °C'; document.getElementById('r3').textContent=t+' s';
+    setStatus(`<b>Trạng thái:</b> ${hot.position.y<1.45?'Vật đang nhúng trong nước':'Vật chưa nhúng'}<br><b>Chênh lệch nhiệt độ:</b> ${Math.abs(Th-Tw).toFixed(1)} °C<br><b>Kết luận:</b> nhiệt truyền từ vật nóng sang nước đến khi cân bằng nhiệt.`);
+  }
+  document.getElementById('hot').oninput=resetVals;
+  document.getElementById('startHeat').onclick=()=>{
+    if(state.runTimer) clearInterval(state.runTimer);
+    state.runTimer=setInterval(()=>{
+      if(hot.position.y<1.45){
+        const k=.06; const d=Th-Tw; Th-=d*k; Tw+=d*k*(0.4 + +document.getElementById('waterMass').value*.3); t++; update();
+        if(Math.abs(d)<.2){ clearInterval(state.runTimer); state.runTimer=null; document.getElementById('score').textContent='Cân bằng'; }
+      }
+    },300);
+  };
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([9,6.5,9.5],[0,.8,0]);
+  resetCamera([9,6.5,9.5],[0,.8,0]); resetVals();
+}
+
+function buildLever(){
+  clearState(); addTable(13,5); setLogHeaders(['M trái','M phải','Trạng thái']);
+  setMeta('⚖️','Khảo sát đòn bẩy 3D','Thanh đòn bẩy có vạch chia • điểm tựa • quả cân','Tìm trạng thái cân bằng của đòn bẩy','Kéo điểm tựa và quả cân đến các vị trí khác nhau rồi so sánh mômen lực hai phía.');
+  setRead('📟 Mômen lực',[['M TRÁI','--','r1'],['M PHẢI','--','r2'],['TRẠNG THÁI','--','r3']]);
+  setControls(`<button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>`);
+  const beam=box(9,.22,.55,0xc69455,.08,.62); beam.position.y=1.2; root.add(beam);
+  for(let i=0;i<=18;i++){ const tick=box(.03,.06,i%2===0?.28:.16,0x173b6d,.05,.72); tick.position.set(-4.5+i*.5,1.36,0); root.add(tick); }
+  const ful=addDrag(new THREE.Mesh(new THREE.ConeGeometry(.45,1,4),mat(0x50718d,.25,.38)),'x',-2,2,update); ful.position.set(0,.55,0); ful.rotation.y=Math.PI/4; root.add(ful);
+  const left=addDrag(cyl(.38,.38,.6,0x3d8ff0,.15,.35),'x',-4,-.6,update); left.position.set(-3,1.55,0); root.add(left);
+  const right=addDrag(cyl(.45,.45,.75,0xff8c2e,.15,.35),'x',.6,4,update); right.position.set(2.5,1.62,0); root.add(right);
+  function update(){
+    const ML=1.0*9.81*Math.abs(left.position.x-ful.position.x), MR=1.5*9.81*Math.abs(right.position.x-ful.position.x), diff=ML-MR;
+    beam.rotation.z=THREE.MathUtils.clamp(diff*.01,-.18,.18);
+    document.getElementById('r1').textContent=ML.toFixed(1)+' Nm';
+    document.getElementById('r2').textContent=MR.toFixed(1)+' Nm';
+    document.getElementById('r3').textContent=Math.abs(diff)<1?'Cân bằng':diff>0?'Trái xuống':'Phải xuống';
+    setStatus(`<b>Vật trái:</b> 1.0 kg tại vị trí ${left.position.x.toFixed(1)} m<br><b>Vật phải:</b> 1.5 kg tại vị trí ${right.position.x.toFixed(1)} m<br><b>Điểm tựa:</b> ${ful.position.x.toFixed(1)} m`);
+  }
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([9,6.8,10],[0,1.1,0]);
+  resetCamera([9,6.8,10],[0,1.1,0]); update();
+}
+
+function buildMagnet(){
+  clearState(); addTable(13,5); setLogHeaders(['Số vòng','Dòng điện','Kẹp hút']);
+  setMeta('🧲','Nam châm điện 3D','Lõi sắt • cuộn dây • công tắc • kẹp giấy','Tăng lực hút của nam châm điện','Điều chỉnh số vòng dây và dòng điện. Quan sát số kẹp giấy được hút về lõi sắt.');
+  setRead('📟 Nam châm điện',[['SỐ VÒNG','100','r1'],['DÒNG ĐIỆN','1.0 A','r2'],['KẸP HÚT','--','r3']]);
+  setControls(`
+    <div class="group"><label>Số vòng dây</label><input id="turns" type="range" min="20" max="200" step="10" value="100"></div>
+    <div class="group"><label>Dòng điện</label><input id="current" type="range" min=".2" max="2" step=".1" value="1"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const core=cyl(.35,.35,4.2,0x7d858c,.45,.28); core.rotation.z=Math.PI/2; core.position.y=.55; root.add(core);
+  const coils=[]; for(let i=0;i<18;i++){const tor=new THREE.Mesh(new THREE.TorusGeometry(.52,.055,10,24),mat(0xd96a2f,.45,.3)); tor.rotation.y=Math.PI/2; tor.position.set(-1.8+i*.22,.55,0); root.add(tor); coils.push(tor);}
+  const switchBase=box(1.4,.16,.7,0x65727c,.25,.42); switchBase.position.set(-4,-.05,-1.1); root.add(switchBase);
+  const clips=[]; for(let i=0;i<12;i++){const c=new THREE.Mesh(new THREE.TorusGeometry(.18,.035,8,20),mat(0x798a98,.7,.25)); c.position.set(2.7+(i%4)*.4,-.3+Math.floor(i/4)*.35,(i%2)*.28-.14); root.add(c); clips.push(c);}
+  const fieldLines=[]; for(let i=0;i<5;i++){ const t=new THREE.Mesh(new THREE.TorusGeometry(1.6+i*.3,.01,6,60,Math.PI), new THREE.MeshBasicMaterial({color:0x4ba7ff,transparent:true,opacity:.24})); t.rotation.y=Math.PI/2; t.position.set(0,.55,0); root.add(t); fieldLines.push(t); }
+  function update(){
+    const N=+document.getElementById('turns').value, I=+document.getElementById('current').value, n=Math.min(12,Math.round(N*I/20));
+    document.getElementById('r1').textContent=N; document.getElementById('r2').textContent=I.toFixed(1)+' A'; document.getElementById('r3').textContent=n+' kẹp';
+    clips.forEach((c,i)=>{ if(i<n){ c.position.x=1.6+(i%4)*.18; c.position.y=.28+Math.floor(i/4)*.18; } else { c.position.x=2.7+(i%4)*.4; c.position.y=-.3+Math.floor(i/4)*.35; } });
+    fieldLines.forEach((l,i)=>{ l.scale.setScalar(.8+N/200*.45+I*.15); l.material.opacity=.12+I*.08; });
+    setStatus(`<b>Độ mạnh từ trường:</b> tỉ lệ với N × I = ${(N*I).toFixed(0)}<br><b>Quan sát:</b> số vòng dây hoặc cường độ dòng điện tăng thì lực hút tăng.`);
+  }
+  document.getElementById('turns').oninput=update; document.getElementById('current').oninput=update;
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([9,6.4,9.5],[0,.5,0]);
+  resetCamera([9,6.4,9.5],[0,.5,0]); update();
+}
+
+function buildBuoyancy(){
+  clearState(); addTable(13,5); setLogHeaders(['Trọng lượng','Lực đẩy','Số chỉ lực kế']);
+  setMeta('🛟','Lực đẩy Ác-si-mét 3D','Lực kế • bình nước • vạch mực nước','Đo lực đẩy của nước lên vật','Kéo vật lên xuống trong bể nước và quan sát số chỉ lực kế giảm khi vật chìm dần.');
+  setRead('📟 Lực kế',[['TRỌNG LƯỢNG','9.81 N','r1'],['LỰC ĐẨY','0.00 N','r2'],['LỰC KẾ','9.81 N','r3']]);
+  setControls(`
+    <div class="group"><label>Khối lượng vật</label><input id="massB" type="range" min=".2" max="2" step=".1" value="1"></div>
+    <div class="group"><label>Thể tích vật</label><input id="volB" type="range" min=".0001" max=".001" step=".0001" value=".0006"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const stand=box(.22,3.4,.22,0x627787,.45,.38); stand.position.set(-2.8,.7,0); root.add(stand);
+  const arm=box(1.8,.08,.08,0x627787,.45,.38); arm.position.set(-2.0,2.1,0); root.add(arm);
+  const dyno=box(.35,1.3,.35,0xf7f9fc,.05,.68); dyno.position.set(-1.2,1.3,0); root.add(dyno); const spring=box(.05,.65,.05,0xe54e49,.05,.62); spring.position.set(-1.2,.85,0); root.add(spring);
+  const tank=box(4,3,3,0xa0daff,.02,.58); tank.material.transparent=true; tank.material.opacity=.18; tank.position.set(1,.52,0); root.add(tank);
+  const water=box(3.8,2.1,2.8,0x3bb7ef,.02,.55); water.material.transparent=true; water.material.opacity=.35; water.position.set(1,.05,0); root.add(water);
+  const obj=addDrag(box(.8,.8,.8,0xd66b39,.1,.58),'y',-.2,3,update); obj.position.set(1,2.4,0); root.add(obj);
+  const string=new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({color:0x46525c})); root.add(string);
+  function update(){
+    const m=+document.getElementById('massB').value, V=+document.getElementById('volB').value;
+    const frac=THREE.MathUtils.clamp((1.1-obj.position.y)/.8,0,1), Fb=1000*9.81*V*frac, W=m*9.81, T=Math.max(0,W-Fb);
+    document.getElementById('r1').textContent=W.toFixed(2)+' N'; document.getElementById('r2').textContent=Fb.toFixed(2)+' N'; document.getElementById('r3').textContent=T.toFixed(2)+' N';
+    spring.scale.y=Math.max(.2,T/10); spring.position.y=1.05-spring.scale.y*.32;
+    string.geometry.setFromPoints([new THREE.Vector3(-1.2,.65,0), new THREE.Vector3(1,obj.position.y+.45,0)]);
+    setStatus(`<b>Mức ngập:</b> ${(frac*100).toFixed(0)}%<br><b>Kết luận:</b> vật chìm càng sâu thì thể tích nước bị chiếm chỗ càng lớn, lực đẩy Ác-si-mét càng tăng.`);
+  }
+  document.getElementById('massB').oninput=update; document.getElementById('volB').oninput=update;
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([9,6.7,10],[0,.8,0]);
+  resetCamera([9,6.7,10],[0,.8,0]); update();
+}
+
+function buildDensity(){
+  clearState(); addTable(13,5); setLogHeaders(['Khối lượng','Thể tích','Khối lượng riêng']);
+  setMeta('🧊','Đo khối lượng riêng 3D','Cân điện tử • bình chia độ • vật mẫu','Xác định khối lượng riêng của vật','Đặt vật lên cân để biết khối lượng, sau đó nhúng vật vào bình chia độ để biết thể tích dời chỗ.');
+  setRead('📟 Số liệu',[['KHỐI LƯỢNG','120 g','r1'],['THỂ TÍCH','-- cm³','r2'],['KLRIÊNG','-- g/cm³','r3']]);
+  setControls(`
+    <div class="group"><label>Khối lượng vật</label><input id="massD" type="range" min="50" max="500" step="10" value="120"></div>
+    <div class="group"><label>Thể tích vật</label><input id="volD" type="range" min="20" max="200" step="10" value="60"></div>
+    <button class="btn secondary" id="record">Ghi số liệu</button><button class="btn secondary" id="cam">🎥 Góc chuẩn</button>
+  `);
+  const scale=box(2.2,.55,1.8,0x364c60,.28,.35); scale.position.set(-3,.05,0); root.add(scale);
+  const display=box(1.1,.22,.08,0x9ef0b8,.02,.68); display.position.set(-3,.25,.92); root.add(display);
+  const platform=box(1.4,.08,1.1,0xc9d5de,.08,.68); platform.position.set(-3,.38,0); root.add(platform);
+  const cyl=addGraduatedCylinder(2.1,0,3.8,1.1);
+  const water=box(1.9,1.95,1.9,0x49baf0,.02,.55); water.material.transparent=true; water.material.opacity=.35; water.position.set(2.1,-.05,0); root.add(water);
+  const obj=addDrag(box(.78,.78,.78,0x6e8ed8,.1,.58),'y',.4,3.1,update); obj.position.set(-3,.85,0); root.add(obj);
+  function update(){
+    const m=+document.getElementById('massD').value, V=+document.getElementById('volD').value;
+    const onScale = obj.position.y<1.05 && obj.position.x < -1.5;
+    const immersed = obj.position.x > 1.1 && obj.position.y < 1.55;
+    document.getElementById('r1').textContent=(onScale?m:0)+' g';
+    document.getElementById('r2').textContent=immersed ? V+' cm³' : '-- cm³';
+    document.getElementById('r3').textContent=immersed ? (m/V).toFixed(2)+' g/cm³' : '-- g/cm³';
+    setStatus(`<b>Vị trí vật:</b> ${onScale?'Trên cân':immersed?'Trong bình nước':'Đang di chuyển'}<br><b>Kết luận:</b> khối lượng riêng ρ = m/V. Cần biết đủ khối lượng và thể tích mới tính được.`);
+  }
+  // allow x drag too by wrapping group
+  obj.userData.axis='x'; obj.userData.min=-3; obj.userData.max=2.1; obj.userData.onDrag=update;
+  document.getElementById('massD').oninput=update; document.getElementById('volD').oninput=update;
+  document.getElementById('record').onclick=()=>{logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]); document.getElementById('score').textContent='Đã đo';}
+  document.getElementById('cam').onclick=()=>resetCamera([10,6.5,10.5],[0,.8,0]);
+  resetCamera([10,6.5,10.5],[0,.8,0]); update();
+}
+
+const builders={friction:buildFriction,reflection:buildReflection,circuit:buildCircuit,sound:buildSound,heat:buildHeat,lever:buildLever,magnet:buildMagnet,buoyancy:buildBuoyancy,density:buildDensity};
+
+function switchExp(id){
+  state.current=id;
+  document.querySelectorAll('.exp').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  builders[id]();
+}
+
+document.querySelectorAll('.exp').forEach(b=>b.onclick=()=>switchExp(b.dataset.id));
+
+function resize(){const w=mount.clientWidth,h=mount.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(mount); resize();
+loading.classList.add('hide'); switchExp('friction');
+(function animate(){ if(state.update) state.update(); orbit.update(); renderer.render(scene,camera); requestAnimationFrame(animate); })();
+</script>
+</body>
+</html>
