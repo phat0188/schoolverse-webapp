@@ -3,12 +3,13 @@ import {Navigate,NavLink,Route,Routes,useNavigate} from 'react-router-dom'
 import campusImg from './campus.webp'
 import schoolMapImg from './school-map.webp'
 import classroomImg from './classroom-v13.webp'
+import VirtualLab from './VirtualLab.jsx'
 const student={name:'Nguyễn Minh Anh',className:'7A2',school:'Trường THCS và THPT Lương Thế Vinh',level:12,xp:3265,xpNext:5000,coins:1250,gems:42,learning:86,training:92,streak:3}
 const timetable=[['07:00','Chào cờ / Điểm danh','Sân trường','🏫'],['07:30','Toán 7','Phòng 7A2','📐'],['08:20','Khoa học tự nhiên','Phòng 7A2','🔬'],['09:25','Tiếng Anh','Phòng 7A2','🇬🇧'],['10:15','Ngữ văn','Phòng 7A2','📖'],['14:00','Câu lạc bộ STEM','Phòng STEM','🧪']]
 const locations=[
 {id:'campus',icon:'🏫',name:'Sân trường',sub:'Trung tâm',desc:'Khu vực trung tâm để nhận nhiệm vụ, gặp NPC và bắt đầu hành trình.',x:48,y:47,route:'/campus'},
 {id:'classroom',icon:'📘',name:'Khu lớp học',sub:'Học tập',desc:'Tham gia tiết học, trả lời câu hỏi và tích lũy XP học tập.',x:23,y:17,route:'/classroom'},
-{id:'stem',icon:'🧪',name:'Phòng STEM',sub:'Sáng tạo',desc:'Làm thí nghiệm, giải nhiệm vụ bí mật và thử thách KHTN - công nghệ.',x:72,y:18,external:'/virtual-lab/index.html'},
+{id:'stem',icon:'🧪',name:'Phòng STEM',sub:'Sáng tạo',desc:'Làm thí nghiệm, giải nhiệm vụ bí mật và thử thách KHTN - công nghệ.',x:72,y:18,route:'/virtual-lab'},
 {id:'library',icon:'📚',name:'Thư viện',sub:'Tài liệu',desc:'Đọc tài liệu, tìm sách và hoàn thành nhiệm vụ học tập.',x:79,y:42},
 {id:'football',icon:'⚽',name:'Sân bóng',sub:'Vận động',desc:'Tham gia mini game thể thao và nhiệm vụ rèn luyện.',x:13,y:39},
 {id:'garden',icon:'🌿',name:'Vườn sinh học',sub:'Thiên nhiên',desc:'Khám phá cây xanh, môi trường và các nhiệm vụ sinh học.',x:17,y:72},
@@ -35,7 +36,7 @@ function Hud(){const pct=Math.round(student.xp/student.xpNext*100);return <heade
         <div><b>{student.name}</b><small>Lv.{student.level} • {student.className}</small><div className='xp'><span style={{width:pct+'%'}}/></div></div>
       </div>
     </header>}
-function Shell({children}){return <><Hud/><nav className='gamenav glass'>{[['/campus','🏫','Sân trường'],['/missions','🎯','Nhiệm vụ'],['/map','🗺️','Bản đồ'],['/schedule','🗓️','Lịch học'],['/classroom','📘','Lớp học'],['/profile','🏆','Hồ sơ']].map(([to,ic,t])=><NavLink key={to} to={to} className={({isActive})=>isActive?'active':''}><span>{ic}</span><small>{t}</small></NavLink>)}<a href='/virtual-lab/index.html'><span>🧪</span><small>Thí nghiệm 3D</small></a></nav><main className='main'>{children}</main></>}
+function Shell({children}){return <><Hud/><nav className='gamenav glass'>{[['/campus','🏫','Sân trường'],['/missions','🎯','Nhiệm vụ'],['/map','🗺️','Bản đồ'],['/schedule','🗓️','Lịch học'],['/classroom','📘','Lớp học'],['/virtual-lab','🧪','Thí nghiệm'],['/profile','🏆','Hồ sơ']].map(([to,ic,t])=><NavLink key={to} to={to} className={({isActive})=>isActive?'active':''}><span>{ic}</span><small>{t}</small></NavLink>)}</nav><main className='main'>{children}</main></>}
 function Campus(){const nav=useNavigate();const done=seedMissions.filter(m=>m.progress>=m.total).length;return <Shell><section className='campus campus-v11'>
       <img src={campusImg} alt='Sân trường Trường THCS và THPT Lương Thế Vinh'/>
       <div className='campus-vignette'/>
@@ -111,8 +112,8 @@ function MapPage(){const nav=useNavigate();const [sel,setSel]=useState(locations
           </div>
           <p>{sel.desc}</p>
           <div className='mapinfo-actions-v12'>
-            <button className='primary compact' disabled={!sel.route&&!sel.external} onClick={()=>{if(sel.external)location.href=sel.external;else if(sel.route)nav(sel.route)}}>
-              {(sel.route||sel.external)?'Đi đến khu vực →':'Sắp mở khóa'}
+            <button className='primary compact' disabled={!sel.route} onClick={()=>sel.route&&nav(sel.route)}>
+              {sel.route?'Đi đến khu vực →':'Sắp mở khóa'}
             </button>
             <button className='soft map-center-btn' onClick={()=>setSel(locations[0])}>🎯 Về Sân trường</button>
           </div>
@@ -130,6 +131,7 @@ function Profile(){const pct=Math.round(student.xp/student.xpNext*100);return <S
 function Schedule(){const nav=useNavigate();return <Shell><section className='page'><div className='pagetitle'><div><span className='badge'>🗓️ LỊCH HỌC HÔM NAY</span><h1>Thời khóa biểu</h1><p>Một ngày học được tổ chức như trong trường thật.</p></div><div className='summary'><span>📚 4 tiết học</span><span>🧪 1 hoạt động STEM</span></div></div><div className='schedule-layout'><section className='schedule-board glass'><div className='schedule-head'><div><small>THỨ HAI</small><h2>Ngày học của Minh Anh</h2></div><span className='status-live'>● Đang trong ngày học</span></div><div className='schedule-list'>{timetable.map((it,i)=><div className={'schedule-item '+(i===2?'current':'')} key={it[0]}><div className='time'>{it[0]}</div><div className='schedule-icon'>{it[3]}</div><div className='schedule-copy'><b>{it[1]}</b><small>{it[2]}</small></div><span className='schedule-type'>{i===2?'Sắp diễn ra':'Đã lên lịch'}</span><button onClick={()=>nav('/classroom')}>Vào lớp</button></div>)}</div></section><aside className='next-class glass'><span className='badge'>⏰ TIẾT TIẾP THEO</span><div className='next-icon'>🔬</div><h2>Khoa học tự nhiên</h2><p>Phòng 7A2 • 08:20</p><div className='countdown'><div><b>00</b><small>giờ</small></div><div><b>12</b><small>phút</small></div><div><b>36</b><small>giây</small></div></div><button className='primary' onClick={()=>nav('/classroom')}>Đi đến lớp học →</button><div className='teacher-note'>👩‍🏫 <span><b>Cô Lan nhắn:</b><small>Nhớ chuẩn bị vở KHTN và máy tính cầm tay nhé!</small></span></div></aside></div></section></Shell>}
 
 function Classroom(){
+  const nav=useNavigate()
   const questions=[
     {q:'Một ô tô đi được 120 m trong 10 giây. Tốc độ của xe bằng bao nhiêu?',formula:'v = s / t = 120 / 10 = ?',answers:[['A','8 m/s'],['B','10 m/s'],['C','12 m/s'],['D','15 m/s']],correct:'C',explain:'Tốc độ v = s/t = 120/10 = 12 m/s.'},
     {q:'Đại lượng nào cho biết mức độ nhanh hay chậm của chuyển động?',formula:'Chọn đại lượng phù hợp.',answers:[['A','Quãng đường'],['B','Thời gian'],['C','Tốc độ'],['D','Khối lượng']],correct:'C',explain:'Tốc độ cho biết mức độ nhanh hay chậm của chuyển động.'},
@@ -234,7 +236,7 @@ function Classroom(){
       <button>📝<span>Ghi chú</span></button>
       <button>📁<span>Tài liệu</span></button>
       <button>▶️<span>Video</span></button>
-      <button onClick={()=>location.href='/virtual-lab/index.html'}>🧪<span>Thí nghiệm</span></button>
+      <button onClick={()=>nav('/virtual-lab')}>🧪<span>Thí nghiệm</span></button>
     </div>
 
     {finished&&<div className='lesson-finish-overlay-v131'>
@@ -258,4 +260,4 @@ function Classroom(){
   </section></Shell>}
 
 function Guard({children}){return localStorage.getItem('sv_user')?children:<Navigate to='/' replace/>}
-export default function App(){return <Routes><Route path='/' element={<Login/>}/><Route path='/campus' element={<Guard><Campus/></Guard>}/><Route path='/map' element={<Guard><MapPage/></Guard>}/><Route path='/missions' element={<Guard><Missions/></Guard>}/><Route path='/schedule' element={<Guard><Schedule/></Guard>}/><Route path='/classroom' element={<Guard><Classroom/></Guard>}/><Route path='/profile' element={<Guard><Profile/></Guard>}/><Route path='*' element={<Navigate to='/' replace/>}/></Routes>}
+export default function App(){return <Routes><Route path='/' element={<Login/>}/><Route path='/campus' element={<Guard><Campus/></Guard>}/><Route path='/map' element={<Guard><MapPage/></Guard>}/><Route path='/missions' element={<Guard><Missions/></Guard>}/><Route path='/schedule' element={<Guard><Schedule/></Guard>}/><Route path='/classroom' element={<Guard><Classroom/></Guard>}/><Route path='/profile' element={<Guard><Profile/></Guard>}/><Route path='/virtual-lab' element={<Guard><VirtualLab/></Guard>}/><Route path='*' element={<Navigate to='/' replace/>}/></Routes>}

@@ -998,3 +998,15 @@
   object-position:center center !important;
   filter:saturate(1.03) contrast(1.02);
 }
+
+
+/* ===== SchoolVerse Embedded Virtual Lab ===== */
+.vl-home{min-height:100vh;background:radial-gradient(circle at 12% 10%,#dff3ff,transparent 34%),radial-gradient(circle at 88% 12%,#e7faed,transparent 36%),linear-gradient(180deg,#f9fcff,#eef5fb);color:#173b6d}
+.vl-home-top{height:68px;background:#fff;border-bottom:1px solid #dfe9f3;display:flex;align-items:center;justify-content:space-between;padding:0 26px;box-shadow:0 8px 24px rgba(15,48,86,.07)}
+.vl-brand{display:flex;align-items:center;gap:10px}.vl-s{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#43adff,#1775e8);font-weight:1000}
+.vl-brand b{font-size:21px}.vl-brand b span{color:#ff8f2d}.vl-brand small{display:block;font-size:8px;letter-spacing:1.5px;color:#8ba0b8;font-weight:900}
+.vl-home-top button,.vl-embedded-top button{border:1px solid #dce8f4;background:#fff;color:#176fdc;border-radius:12px;padding:9px 12px;font-weight:900;cursor:pointer}
+.vl-home-main{max-width:1120px;margin:auto;padding:34px 22px 50px}.vl-hero{text-align:center;margin-bottom:28px}.vl-hero>span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#eaf5ff;color:#176fdc;font-size:9px;font-weight:1000}.vl-hero h1{font-size:34px;margin:10px 0 8px}.vl-hero p{max-width:760px;margin:auto;color:#7187a0;font-size:13px;line-height:1.6}
+.vl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.vl-card{background:#fff;border:1px solid #e1eaf3;border-radius:23px;padding:21px;box-shadow:0 17px 42px rgba(15,48,86,.10)}.vl-card-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:#f1f7fd;font-size:31px;margin-bottom:14px}.vl-card h2{margin:0 0 7px;font-size:20px}.vl-card p{min-height:52px;margin:0 0 15px;color:#7187a0;font-size:11px;line-height:1.55}.vl-card button{border:0;border-radius:12px;padding:10px 13px;color:#fff;background:linear-gradient(180deg,#3198ff,#1778e8);font-weight:1000;cursor:pointer}
+.vl-embedded-shell{height:100vh;display:grid;grid-template-rows:58px 1fr;background:#eaf2f8}.vl-embedded-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;background:#fff;border-bottom:1px solid #dfe9f3;padding:0 14px;box-shadow:0 6px 18px rgba(15,48,86,.08);z-index:10}.vl-embedded-top>div{text-align:center}.vl-embedded-top b,.vl-embedded-top small{display:block}.vl-embedded-top b{font-size:13px}.vl-embedded-top small{font-size:7px;color:#8195aa;margin-top:2px}.vl-embedded-frame{width:100%;height:100%;border:0;background:#fff}
+@media(max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-hero h1{font-size:27px}.vl-home-top{padding:0 12px}.vl-embedded-top{grid-template-columns:auto 1fr}.vl-embedded-top button:last-child{display:none}}

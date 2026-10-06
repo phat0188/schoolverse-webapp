@@ -1,34 +1,17 @@
-# SchoolVerse V1.3.2 + Virtual Lab 3D (FIXED)
+# SchoolVerse V1.3.2 + Virtual Lab EMBEDDED FIXED
 
-Đây là source hoàn chỉnh dựa trên commit `779c59c` và đã tích hợp Virtual Lab theo cách không ghi đè giao diện chính.
+Bản này KHÔNG dùng `public/virtual-lab/`.
 
-## Đã giữ nguyên
-- `index.html` gốc của Vite
-- `App.jsx` V1.3.2
-- `styles.css`
-- `campus.webp`
-- `school-map.webp`
-- `classroom-v13.webp`
-- `main.jsx`, `package.json`, `vite.config.js`
+Virtual Lab được nhúng trực tiếp vào React bằng `VirtualLab.jsx` và route `/virtual-lab`.
+Vì vậy nút Thí nghiệm không còn phụ thuộc file tĩnh và không bị 404.
 
-## Đã thêm
-- `public/virtual-lab/index.html`
-- `public/virtual-lab/labs/physics_speedcart.html`
-- `public/virtual-lab/labs/physics_lab.html`
-- `public/virtual-lab/labs/chemistry_lab.html`
-- `public/virtual-lab/labs/biology_lab.html`
+## Upload
+Giải nén ZIP và upload toàn bộ nội dung bên trong lên root repository.
 
-## Điểm vào Virtual Lab
-- Menu bên trái: **Thí nghiệm 3D**
-- Nút **Thí nghiệm** trong lớp học
-- Hotspot **Phòng STEM** trên bản đồ
+Các file mới/quan trọng:
+- VirtualLab.jsx
+- App.jsx
+- styles.css
+- vercel.json
 
-Tất cả đều mở `/virtual-lab/index.html`.
-
-## Upload GitHub
-Khuyến nghị: xóa/khôi phục repository về commit `779c59c`, sau đó upload **toàn bộ nội dung của thư mục này** vào root repository.
-
-Không upload thư mục cha bao quanh nếu GitHub đang yêu cầu các file ở root.
-
-## Lưu ý
-Các lab tải Three.js từ `esm.sh`, vì vậy cần Internet khi mở mô phỏng 3D.
+Thư mục `labs` cũ ở GitHub có thể để nguyên, ứng dụng không dùng nó.
