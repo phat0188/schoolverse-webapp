@@ -1,24 +1,16 @@
-# SchoolVerse V1.3 – Classroom Experience
+# SchoolVerse V1.3.2 – Classroom Asset Fixed
 
-Phiên bản này giữ nguyên V1.2.1 Full Map và nâng cấp màn hình lớp học.
+Bản này sửa đúng lỗi của V1.3.1: ảnh lớp học mới được đưa thật sự vào project.
 
-## Classroom Experience
-- Giao diện tiết học game hóa
-- 5 câu hỏi tương tác KHTN 7
-- Chấm đúng/sai
-- Giải thích đáp án
-- XP theo câu đúng
-- Chuỗi trả lời đúng
-- Focus
-- Tiến độ tiết học
-- Thanh công cụ Ghi chú / Tài liệu / Video / Thí nghiệm
-- Hội thoại giáo viên
-- Màn hình tổng kết cuối tiết
-- Học lại / Về sân trường
+## Quan trọng
+- Đã thêm `classroom-v13.webp`
+- Đã xóa `classroom.svg` cũ
+- `App.jsx` import trực tiếp `./classroom-v13.webp`
+- Scene lớp học V1.3.1 tiếp tục dùng quiz / XP / Focus / tổng kết bằng React
+- Có nhãn nhỏ `V1.3.2 • CLASSROOM 3D` để dễ xác nhận đúng phiên bản
 
-## Lưu ý
-Toàn bộ dữ liệu hiện vẫn là demo.
-Chưa kết nối Supabase/database.
+## Khi upload GitHub
+Hãy upload toàn bộ file trong ZIP để ghi đè.
+Nếu GitHub vẫn còn `classroom.svg` cũ từ commit trước, có thể để lại cũng không ảnh hưởng vì App.jsx không còn gọi file đó.
 
-## Cập nhật
-Upload toàn bộ file lên GitHub -> Commit changes -> Vercel tự deploy lại.
+Sau Commit, Vercel sẽ tự deploy lại.

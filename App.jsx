@@ -2,8 +2,7 @@ import {useMemo,useState} from 'react'
 import {Navigate,NavLink,Route,Routes,useNavigate} from 'react-router-dom'
 import campusImg from './campus.webp'
 import schoolMapImg from './school-map.webp'
-import classroomImg from './classroom.svg'
-
+import classroomImg from './classroom-v13.webp'
 const student={name:'Nguyễn Minh Anh',className:'7A2',school:'Trường THCS và THPT Lương Thế Vinh',level:12,xp:3265,xpNext:5000,coins:1250,gems:42,learning:86,training:92,streak:3}
 const timetable=[['07:00','Chào cờ / Điểm danh','Sân trường','🏫'],['07:30','Toán 7','Phòng 7A2','📐'],['08:20','Khoa học tự nhiên','Phòng 7A2','🔬'],['09:25','Tiếng Anh','Phòng 7A2','🇬🇧'],['10:15','Ngữ văn','Phòng 7A2','📖'],['14:00','Câu lạc bộ STEM','Phòng STEM','🧪']]
 const locations=[
@@ -147,7 +146,6 @@ function Classroom(){
   const [finished,setFinished]=useState(false)
   const q=questions[index]
   const isCorrect=submitted&&selected===q.correct
-  const progress=Math.round((index/ questions.length)*100)
 
   function submitAnswer(){
     if(!selected||submitted)return
@@ -156,122 +154,102 @@ function Classroom(){
       setCorrectCount(v=>v+1)
       setXpEarned(v=>v+10)
       setStreak(v=>v+1)
-    }else{
-      setStreak(0)
-    }
+    }else setStreak(0)
   }
-
   function nextQuestion(){
-    if(index===questions.length-1){
-      setFinished(true)
-      return
-    }
-    setIndex(v=>v+1)
-    setSelected(null)
-    setSubmitted(false)
+    if(index===questions.length-1){setFinished(true);return}
+    setIndex(v=>v+1);setSelected(null);setSubmitted(false)
   }
-
   function restartLesson(){
     setIndex(0);setSelected(null);setSubmitted(false);setCorrectCount(0);setXpEarned(0);setStreak(0);setFinished(false)
   }
 
-  return <Shell><section className='page classroom-page-v13'>
-    <div className='classroom-header-v13'>
+  return <Shell><section className='classroom-stage-v131'>
+    <img className='classroom-bg-v131' src={classroomImg} alt='Lớp học SchoolVerse'/>
+    <div className='classroom-cinematic-v131'/>
+
+    <div className='lesson-card-v131 glass'>
+      <div className='lesson-icon-v131'>🔬</div>
       <div>
-        <span className='badge'>📘 TIẾT HỌC TƯƠNG TÁC</span>
-        <h1>Khoa học tự nhiên 7</h1>
-        <p>Bài 9: Đo tốc độ chuyển động</p>
+        <small>KHOA HỌC TỰ NHIÊN 7</small>
+        <h2>Bài 9: Đo tốc độ</h2>
+        <p>Hiểu công thức và vận dụng vào tình huống thực tế.</p>
       </div>
-      <div className='classroom-stats-v13'>
-        <span>🎯 Focus <b>92%</b></span>
-        <span>⭐ XP <b>{xpEarned}</b></span>
-        <span>🔥 Chuỗi đúng <b>{streak}</b></span>
-      </div>
-    </div>
-
-    <div className='classroom-progress-v13'>
-      <div className='lesson-progress-copy'>
-        <span>Tiến độ tiết học</span>
-        <b>Câu {index+1}/{questions.length}</b>
-      </div>
-      <div className='lesson-progress-track'><span style={{width:`${Math.max(8,((index+(submitted?1:0))/questions.length)*100)}%`}}/></div>
-      <div className='lesson-steps-v13'>
-        {questions.map((_,i)=><span key={i} className={(i<index?'done ':'')+(i===index?'active':'')}>{i<index?'✓':i+1}</span>)}
+      <div className='lesson-progress-mini-v131'>
+        <b>{index+1}/{questions.length}</b>
+        <span><i style={{width:`${((index+1)/questions.length)*100}%`}}/></span>
       </div>
     </div>
 
-    <div className='classroom-layout-v13'>
-      <section className='classroom-scene-v13'>
-        <img src={classroomImg} alt='Lớp học SchoolVerse'/>
-        <div className='classroom-overlay-v13'/>
-        <div className='lesson-objective-v13 glass'>
-          <span className='objective-icon'>🔬</span>
-          <div><small>MỤC TIÊU BÀI HỌC</small><b>Hiểu và vận dụng công thức tốc độ</b></div>
-        </div>
-        <div className='teacher-dialog-v13 glass'>
-          <div className='teacher-avatar-v13'>👩‍🏫</div>
-          <div><small>CÔ LAN</small><b>{submitted?(isCorrect?'Rất tốt! Em đã hiểu bài rồi.':'Không sao, xem lại công thức và thử tiếp nhé!'):'Hãy quan sát, suy nghĩ rồi chọn đáp án phù hợp nhé!'}</b></div>
-        </div>
-        <div className='classroom-toolbar-v13'>
-          <button title='Ghi chú'>📝<span>Ghi chú</span></button>
-          <button title='Tài liệu'>📁<span>Tài liệu</span></button>
-          <button title='Video bài học'>▶️<span>Video</span></button>
-          <button title='Thí nghiệm ảo'>🧪<span>Thí nghiệm</span></button>
-        </div>
-      </section>
-
-      <aside className='quiz-card-v13 glass'>
-        <div className='quiz-top-v13'>
-          <span className='badge'>CÂU {index+1} / {questions.length}</span>
-          <strong>+10 XP</strong>
-        </div>
-        <h2>{q.q}</h2>
-        <div className='formula-v13'>{q.formula}</div>
-
-        <div className='answers-v13'>
-          {q.answers.map(([key,text])=><button
-            key={key}
-            className={(selected===key?'selected ':'')+(submitted?(key===q.correct?'correct ':selected===key?'wrong ':''):'')}
-            onClick={()=>!submitted&&setSelected(key)}>
-              <span>{key}</span><b>{text}</b>
-              {submitted&&key===q.correct&&<i>✓</i>}
-          </button>)}
-        </div>
-
-        {submitted&&<div className={'feedback-v13 '+(isCorrect?'ok':'bad')}>
-          <b>{isCorrect?'✅ Chính xác!':'💡 Chưa chính xác.'}</b>
-          <span>{q.explain}</span>
-        </div>}
-
-        <div className='quiz-actions-v13'>
-          {!submitted
-            ?<button className='primary' disabled={!selected} onClick={submitAnswer}>Kiểm tra đáp án</button>
-            :<button className='primary' onClick={nextQuestion}>{index===questions.length-1?'Hoàn thành tiết học 🎉':'Câu tiếp theo →'}</button>}
-          <button className='hint-btn-v13' onClick={()=>alert('Gợi ý: hãy nhớ công thức v = s / t')}>💡 Gợi ý</button>
-        </div>
-      </aside>
+    <div className='teacher-bubble-v131 glass'>
+      <span className='teacher-face-v131'>👩‍🏫</span>
+      <div>
+        <small>CÔ LAN</small>
+        <b>{submitted
+          ? (isCorrect?'Rất tốt! Em đã trả lời chính xác.':'Chưa đúng rồi. Hãy xem phần giải thích nhé!')
+          : 'Hãy quan sát câu hỏi và chọn đáp án em cho là đúng.'}</b>
+      </div>
     </div>
 
-    <div className='lesson-bottom-v13'>
-      <div><span>✅</span><b>{correctCount}</b><small>Câu đúng</small></div>
-      <div><span>⭐</span><b>{xpEarned}</b><small>XP nhận được</small></div>
-      <div><span>🔥</span><b>{streak}</b><small>Chuỗi đúng</small></div>
-      <div><span>⏱️</span><b>08:25</b><small>Thời gian còn lại</small></div>
+    <div className='quiz-float-v131 glass'>
+      <div className='quiz-float-top-v131'>
+        <span className='badge'>CÂU {index+1} / {questions.length}</span>
+        <span className='reward-xp-v131'>⭐ +10 XP</span>
+      </div>
+      <h2>{q.q}</h2>
+      <div className='formula-float-v131'>{q.formula}</div>
+
+      <div className='answers-float-v131'>
+        {q.answers.map(([key,text])=><button
+          key={key}
+          className={(selected===key?'selected ':'')+(submitted?(key===q.correct?'correct ':selected===key?'wrong ':''):'')}
+          onClick={()=>!submitted&&setSelected(key)}>
+            <span>{key}</span>
+            <b>{text}</b>
+            {submitted&&key===q.correct&&<i>✓</i>}
+        </button>)}
+      </div>
+
+      {submitted&&<div className={'feedback-float-v131 '+(isCorrect?'ok':'bad')}>
+        <b>{isCorrect?'✅ Chính xác!':'💡 Chưa chính xác.'}</b>
+        <span>{q.explain}</span>
+      </div>}
+
+      <div className='quiz-controls-v131'>
+        <button className='hint-v131' onClick={()=>alert('Gợi ý: hãy nhớ công thức v = s / t')}>💡 Gợi ý</button>
+        {!submitted
+          ?<button className='primary' disabled={!selected} onClick={submitAnswer}>Kiểm tra đáp án</button>
+          :<button className='primary' onClick={nextQuestion}>{index===questions.length-1?'Hoàn thành tiết học 🎉':'Câu tiếp theo →'}</button>}
+      </div>
     </div>
 
-    {finished&&<div className='lesson-summary-backdrop-v13'>
-      <div className='lesson-summary-v13 glass'>
-        <div className='summary-trophy-v13'>🏆</div>
+    <div className='classroom-top-stats-v131 glass'>
+      <span>🎯 <b>92%</b><small>Focus</small></span>
+      <span>⭐ <b>{xpEarned}</b><small>XP</small></span>
+      <span>🔥 <b>{streak}</b><small>Chuỗi đúng</small></span>
+      <span>⏱️ <b>08:25</b><small>Còn lại</small></span>
+    </div>
+
+    <div className='classroom-tools-v131'>
+      <button>📝<span>Ghi chú</span></button>
+      <button>📁<span>Tài liệu</span></button>
+      <button>▶️<span>Video</span></button>
+      <button>🧪<span>Thí nghiệm</span></button>
+    </div>
+
+    {finished&&<div className='lesson-finish-overlay-v131'>
+      <div className='lesson-finish-card-v131 glass'>
+        <div className='finish-trophy-v131'>🏆</div>
         <span className='badge'>HOÀN THÀNH TIẾT HỌC</span>
-        <h2>Rất tốt, {student.name}!</h2>
-        <p>Bạn đã hoàn thành bài <b>Đo tốc độ chuyển động</b>.</p>
-        <div className='summary-grid-v13'>
+        <h2>Xuất sắc, {student.name}!</h2>
+        <p>Bạn đã hoàn thành <b>Bài 9: Đo tốc độ</b>.</p>
+        <div className='finish-stats-v131'>
           <div><span>✅</span><b>{correctCount}/{questions.length}</b><small>Câu đúng</small></div>
-          <div><span>⭐</span><b>{xpEarned}</b><small>XP</small></div>
+          <div><span>⭐</span><b>{xpEarned}</b><small>XP nhận được</small></div>
           <div><span>🎯</span><b>{Math.round(correctCount/questions.length*100)}%</b><small>Độ chính xác</small></div>
-          <div><span>📘</span><b>+{Math.max(5,correctCount*2)}</b><small>Điểm học tập</small></div>
+          <div><span>🔥</span><b>{streak}</b><small>Chuỗi cuối</small></div>
         </div>
-        <div className='summary-actions-v13'>
+        <div className='finish-actions-v131'>
           <button className='soft' onClick={restartLesson}>↻ Học lại</button>
           <button className='primary' onClick={()=>location.href='/campus'}>Về sân trường →</button>
         </div>
