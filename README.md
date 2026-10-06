@@ -1,22 +1,24 @@
-# SchoolVerse V1.2 – Map Clean & Interaction
+# SchoolVerse V1.3 – Classroom Experience
 
-Phiên bản này giữ nguyên V1.1.1 HD Campus và nâng cấp riêng màn hình bản đồ.
+Phiên bản này giữ nguyên V1.2.1 Full Map và nâng cấp màn hình lớp học.
 
-## Thay đổi
-- Hotspot nhỏ, gọn, không che kiến trúc
-- Hiệu ứng pulse khi chọn
-- Nhãn "Bạn đang ở đây"
-- Panel thông tin khu vực gọn hơn
-- Route Khu lớp học đi đúng vào `/classroom`
-- Nút "Về Sân trường"
-- Chú giải trạng thái
-- Khóa tỉ lệ bản đồ desktop để hotspot ổn định hơn
-- Responsive mobile/tablet tốt hơn
+## Classroom Experience
+- Giao diện tiết học game hóa
+- 5 câu hỏi tương tác KHTN 7
+- Chấm đúng/sai
+- Giải thích đáp án
+- XP theo câu đúng
+- Chuỗi trả lời đúng
+- Focus
+- Tiến độ tiết học
+- Thanh công cụ Ghi chú / Tài liệu / Video / Thí nghiệm
+- Hội thoại giáo viên
+- Màn hình tổng kết cuối tiết
+- Học lại / Về sân trường
+
+## Lưu ý
+Toàn bộ dữ liệu hiện vẫn là demo.
+Chưa kết nối Supabase/database.
 
 ## Cập nhật
-1. Giải nén ZIP
-2. Upload toàn bộ file lên GitHub
-3. Commit changes
-4. Vercel tự deploy lại
-
-Demo: HS001 / 123456
+Upload toàn bộ file lên GitHub -> Commit changes -> Vercel tự deploy lại.

@@ -130,7 +130,154 @@ function Profile(){const pct=Math.round(student.xp/student.xpNext*100);return <S
 
 function Schedule(){const nav=useNavigate();return <Shell><section className='page'><div className='pagetitle'><div><span className='badge'>🗓️ LỊCH HỌC HÔM NAY</span><h1>Thời khóa biểu</h1><p>Một ngày học được tổ chức như trong trường thật.</p></div><div className='summary'><span>📚 4 tiết học</span><span>🧪 1 hoạt động STEM</span></div></div><div className='schedule-layout'><section className='schedule-board glass'><div className='schedule-head'><div><small>THỨ HAI</small><h2>Ngày học của Minh Anh</h2></div><span className='status-live'>● Đang trong ngày học</span></div><div className='schedule-list'>{timetable.map((it,i)=><div className={'schedule-item '+(i===2?'current':'')} key={it[0]}><div className='time'>{it[0]}</div><div className='schedule-icon'>{it[3]}</div><div className='schedule-copy'><b>{it[1]}</b><small>{it[2]}</small></div><span className='schedule-type'>{i===2?'Sắp diễn ra':'Đã lên lịch'}</span><button onClick={()=>nav('/classroom')}>Vào lớp</button></div>)}</div></section><aside className='next-class glass'><span className='badge'>⏰ TIẾT TIẾP THEO</span><div className='next-icon'>🔬</div><h2>Khoa học tự nhiên</h2><p>Phòng 7A2 • 08:20</p><div className='countdown'><div><b>00</b><small>giờ</small></div><div><b>12</b><small>phút</small></div><div><b>36</b><small>giây</small></div></div><button className='primary' onClick={()=>nav('/classroom')}>Đi đến lớp học →</button><div className='teacher-note'>👩‍🏫 <span><b>Cô Lan nhắn:</b><small>Nhớ chuẩn bị vở KHTN và máy tính cầm tay nhé!</small></span></div></aside></div></section></Shell>}
 
-function Classroom(){const [selected,setSelected]=useState(null);const [submitted,setSubmitted]=useState(false);const answers=[['A','8 m/s'],['B','10 m/s'],['C','12 m/s'],['D','15 m/s']];const correct='C';return <Shell><section className='page'><div className='pagetitle'><div><span className='badge'>📘 TIẾT HỌC TRỰC TIẾP</span><h1>Khoa học tự nhiên 7</h1><p>Bài: Tốc độ chuyển động</p></div><div className='summary'><span>🎯 Focus 92%</span><span>⭐ +30 XP</span></div></div><div className='classroom-layout'><section className='classroom-scene'><img src={classroomImg} alt='Lớp học'/><div className='teacher-dialog glass'><span>👩‍🏫</span><div><b>Cô Lan</b><p>Một ô tô đi được 120 m trong 10 giây. Em hãy tính tốc độ của xe.</p></div></div><div className='focus-meter glass'><span>🎯 Focus</span><div><i style={{width:'92%'}}/></div><b>92%</b></div></section><aside className='quiz-card glass'><div className='quiz-top'><span className='badge'>CÂU HỎI 3 / 5</span><b>+10 XP</b></div><h2>Tốc độ của xe bằng bao nhiêu?</h2><p className='formula'>v = s / t = 120 / 10 = ?</p><div className='answers'>{answers.map(([k,t])=><button key={k} className={(selected===k?'selected ':'')+(submitted?(k===correct?'correct':selected===k?'wrong':''):'')} onClick={()=>!submitted&&setSelected(k)}><span>{k}</span><b>{t}</b></button>)}</div>{submitted&&<div className={'feedback '+(selected===correct?'ok':'bad')}>{selected===correct?'✅ Chính xác! Tốc độ của xe là 12 m/s.':'❌ Chưa đúng. Hãy nhớ công thức v = s/t.'}</div>}<button className='primary' disabled={!selected} onClick={()=>setSubmitted(true)}>{submitted?'Câu tiếp theo →':'Kiểm tra đáp án'}</button></aside></div></section></Shell>}
+function Classroom(){
+  const questions=[
+    {q:'Một ô tô đi được 120 m trong 10 giây. Tốc độ của xe bằng bao nhiêu?',formula:'v = s / t = 120 / 10 = ?',answers:[['A','8 m/s'],['B','10 m/s'],['C','12 m/s'],['D','15 m/s']],correct:'C',explain:'Tốc độ v = s/t = 120/10 = 12 m/s.'},
+    {q:'Đại lượng nào cho biết mức độ nhanh hay chậm của chuyển động?',formula:'Chọn đại lượng phù hợp.',answers:[['A','Quãng đường'],['B','Thời gian'],['C','Tốc độ'],['D','Khối lượng']],correct:'C',explain:'Tốc độ cho biết mức độ nhanh hay chậm của chuyển động.'},
+    {q:'Một bạn chạy 60 m trong 12 giây. Tốc độ của bạn là bao nhiêu?',formula:'v = 60 / 12 = ?',answers:[['A','3 m/s'],['B','4 m/s'],['C','5 m/s'],['D','6 m/s']],correct:'C',explain:'60 chia 12 bằng 5, nên v = 5 m/s.'},
+    {q:'Muốn đo tốc độ của một vật, cần đo những đại lượng nào?',formula:'v = s / t',answers:[['A','Khối lượng và thời gian'],['B','Quãng đường và thời gian'],['C','Nhiệt độ và quãng đường'],['D','Lực và thời gian']],correct:'B',explain:'Cần biết quãng đường s và thời gian t để tính v = s/t.'},
+    {q:'Một xe đạp đi với tốc độ 4 m/s trong 15 giây. Quãng đường đi được là bao nhiêu?',formula:'s = v × t = 4 × 15 = ?',answers:[['A','45 m'],['B','50 m'],['C','60 m'],['D','75 m']],correct:'C',explain:'s = v × t = 4 × 15 = 60 m.'}
+  ]
+  const [index,setIndex]=useState(0)
+  const [selected,setSelected]=useState(null)
+  const [submitted,setSubmitted]=useState(false)
+  const [correctCount,setCorrectCount]=useState(0)
+  const [xpEarned,setXpEarned]=useState(0)
+  const [streak,setStreak]=useState(0)
+  const [finished,setFinished]=useState(false)
+  const q=questions[index]
+  const isCorrect=submitted&&selected===q.correct
+  const progress=Math.round((index/ questions.length)*100)
+
+  function submitAnswer(){
+    if(!selected||submitted)return
+    setSubmitted(true)
+    if(selected===q.correct){
+      setCorrectCount(v=>v+1)
+      setXpEarned(v=>v+10)
+      setStreak(v=>v+1)
+    }else{
+      setStreak(0)
+    }
+  }
+
+  function nextQuestion(){
+    if(index===questions.length-1){
+      setFinished(true)
+      return
+    }
+    setIndex(v=>v+1)
+    setSelected(null)
+    setSubmitted(false)
+  }
+
+  function restartLesson(){
+    setIndex(0);setSelected(null);setSubmitted(false);setCorrectCount(0);setXpEarned(0);setStreak(0);setFinished(false)
+  }
+
+  return <Shell><section className='page classroom-page-v13'>
+    <div className='classroom-header-v13'>
+      <div>
+        <span className='badge'>📘 TIẾT HỌC TƯƠNG TÁC</span>
+        <h1>Khoa học tự nhiên 7</h1>
+        <p>Bài 9: Đo tốc độ chuyển động</p>
+      </div>
+      <div className='classroom-stats-v13'>
+        <span>🎯 Focus <b>92%</b></span>
+        <span>⭐ XP <b>{xpEarned}</b></span>
+        <span>🔥 Chuỗi đúng <b>{streak}</b></span>
+      </div>
+    </div>
+
+    <div className='classroom-progress-v13'>
+      <div className='lesson-progress-copy'>
+        <span>Tiến độ tiết học</span>
+        <b>Câu {index+1}/{questions.length}</b>
+      </div>
+      <div className='lesson-progress-track'><span style={{width:`${Math.max(8,((index+(submitted?1:0))/questions.length)*100)}%`}}/></div>
+      <div className='lesson-steps-v13'>
+        {questions.map((_,i)=><span key={i} className={(i<index?'done ':'')+(i===index?'active':'')}>{i<index?'✓':i+1}</span>)}
+      </div>
+    </div>
+
+    <div className='classroom-layout-v13'>
+      <section className='classroom-scene-v13'>
+        <img src={classroomImg} alt='Lớp học SchoolVerse'/>
+        <div className='classroom-overlay-v13'/>
+        <div className='lesson-objective-v13 glass'>
+          <span className='objective-icon'>🔬</span>
+          <div><small>MỤC TIÊU BÀI HỌC</small><b>Hiểu và vận dụng công thức tốc độ</b></div>
+        </div>
+        <div className='teacher-dialog-v13 glass'>
+          <div className='teacher-avatar-v13'>👩‍🏫</div>
+          <div><small>CÔ LAN</small><b>{submitted?(isCorrect?'Rất tốt! Em đã hiểu bài rồi.':'Không sao, xem lại công thức và thử tiếp nhé!'):'Hãy quan sát, suy nghĩ rồi chọn đáp án phù hợp nhé!'}</b></div>
+        </div>
+        <div className='classroom-toolbar-v13'>
+          <button title='Ghi chú'>📝<span>Ghi chú</span></button>
+          <button title='Tài liệu'>📁<span>Tài liệu</span></button>
+          <button title='Video bài học'>▶️<span>Video</span></button>
+          <button title='Thí nghiệm ảo'>🧪<span>Thí nghiệm</span></button>
+        </div>
+      </section>
+
+      <aside className='quiz-card-v13 glass'>
+        <div className='quiz-top-v13'>
+          <span className='badge'>CÂU {index+1} / {questions.length}</span>
+          <strong>+10 XP</strong>
+        </div>
+        <h2>{q.q}</h2>
+        <div className='formula-v13'>{q.formula}</div>
+
+        <div className='answers-v13'>
+          {q.answers.map(([key,text])=><button
+            key={key}
+            className={(selected===key?'selected ':'')+(submitted?(key===q.correct?'correct ':selected===key?'wrong ':''):'')}
+            onClick={()=>!submitted&&setSelected(key)}>
+              <span>{key}</span><b>{text}</b>
+              {submitted&&key===q.correct&&<i>✓</i>}
+          </button>)}
+        </div>
+
+        {submitted&&<div className={'feedback-v13 '+(isCorrect?'ok':'bad')}>
+          <b>{isCorrect?'✅ Chính xác!':'💡 Chưa chính xác.'}</b>
+          <span>{q.explain}</span>
+        </div>}
+
+        <div className='quiz-actions-v13'>
+          {!submitted
+            ?<button className='primary' disabled={!selected} onClick={submitAnswer}>Kiểm tra đáp án</button>
+            :<button className='primary' onClick={nextQuestion}>{index===questions.length-1?'Hoàn thành tiết học 🎉':'Câu tiếp theo →'}</button>}
+          <button className='hint-btn-v13' onClick={()=>alert('Gợi ý: hãy nhớ công thức v = s / t')}>💡 Gợi ý</button>
+        </div>
+      </aside>
+    </div>
+
+    <div className='lesson-bottom-v13'>
+      <div><span>✅</span><b>{correctCount}</b><small>Câu đúng</small></div>
+      <div><span>⭐</span><b>{xpEarned}</b><small>XP nhận được</small></div>
+      <div><span>🔥</span><b>{streak}</b><small>Chuỗi đúng</small></div>
+      <div><span>⏱️</span><b>08:25</b><small>Thời gian còn lại</small></div>
+    </div>
+
+    {finished&&<div className='lesson-summary-backdrop-v13'>
+      <div className='lesson-summary-v13 glass'>
+        <div className='summary-trophy-v13'>🏆</div>
+        <span className='badge'>HOÀN THÀNH TIẾT HỌC</span>
+        <h2>Rất tốt, {student.name}!</h2>
+        <p>Bạn đã hoàn thành bài <b>Đo tốc độ chuyển động</b>.</p>
+        <div className='summary-grid-v13'>
+          <div><span>✅</span><b>{correctCount}/{questions.length}</b><small>Câu đúng</small></div>
+          <div><span>⭐</span><b>{xpEarned}</b><small>XP</small></div>
+          <div><span>🎯</span><b>{Math.round(correctCount/questions.length*100)}%</b><small>Độ chính xác</small></div>
+          <div><span>📘</span><b>+{Math.max(5,correctCount*2)}</b><small>Điểm học tập</small></div>
+        </div>
+        <div className='summary-actions-v13'>
+          <button className='soft' onClick={restartLesson}>↻ Học lại</button>
+          <button className='primary' onClick={()=>location.href='/campus'}>Về sân trường →</button>
+        </div>
+      </div>
+    </div>}
+  </section></Shell>}
 
 function Guard({children}){return localStorage.getItem('sv_user')?children:<Navigate to='/' replace/>}
 export default function App(){return <Routes><Route path='/' element={<Login/>}/><Route path='/campus' element={<Guard><Campus/></Guard>}/><Route path='/map' element={<Guard><MapPage/></Guard>}/><Route path='/missions' element={<Guard><Missions/></Guard>}/><Route path='/schedule' element={<Guard><Schedule/></Guard>}/><Route path='/classroom' element={<Guard><Classroom/></Guard>}/><Route path='/profile' element={<Guard><Profile/></Guard>}/><Route path='*' element={<Navigate to='/' replace/>}/></Routes>}
