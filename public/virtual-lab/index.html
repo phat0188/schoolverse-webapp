@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolVerse – Phòng thí nghiệm ảo 3D</title>
+<style>
+:root{--ink:#173b6d;--muted:#7187a0;--line:#dfe9f3}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 10% 10%,#dff3ff,transparent 34%),radial-gradient(circle at 90% 12%,#e7faed,transparent 36%),linear-gradient(180deg,#f9fcff,#eef5fb)}
+header{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;box-shadow:0 8px 24px rgba(15,48,86,.07)}
+.brand{display:flex;gap:10px;align-items:center}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#43adff,#1775e8);color:#fff;display:grid;place-items:center;font-weight:1000}.brand b{font-size:21px}.brand b span{color:#ff8f2d}.brand small{display:block;font-size:8px;color:#8ba0b8;letter-spacing:1.5px;font-weight:900}
+.back{color:#176fdc;text-decoration:none;font-size:11px;font-weight:900;padding:8px 11px;border:1px solid #dce8f4;border-radius:12px}
+main{max-width:1120px;margin:auto;padding:34px 22px 46px}.hero{text-align:center;margin-bottom:27px}.hero h1{font-size:34px;margin:0 0 8px}.hero p{margin:auto;max-width:760px;color:var(--muted);font-size:13px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.card{background:#fff;border:1px solid #e1eaf3;border-radius:23px;padding:21px;box-shadow:0 17px 42px rgba(15,48,86,.10)}.icon{width:56px;height:56px;border-radius:17px;display:grid;place-items:center;font-size:29px;margin-bottom:14px}.card h2{margin:0 0 6px;font-size:20px}.card p{margin:0 0 14px;color:var(--muted);font-size:11px;line-height:1.55}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:15px}.tags span{padding:5px 7px;border-radius:999px;background:#f5f9fd;border:1px solid #e3ebf4;font-size:7px;font-weight:900}.open{display:inline-flex;text-decoration:none;color:#fff;border-radius:12px;padding:10px 13px;font-size:10px;font-weight:1000}.speed .icon{background:#fff2e6}.speed .open{background:#ed861f}.phy .icon{background:#eaf5ff}.phy .open{background:#1778e8}.chem .icon{background:#e7fafd}.chem .open{background:#168fad}.bio .icon{background:#eaf9ef}.bio .open{background:#289e69}.note{margin-top:20px;background:#fff;border:1px solid #e1eaf3;border-radius:16px;padding:14px;color:#5f758b;font-size:10px;line-height:1.55}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">S</div><div><b>School<span>Verse</span></b><small>VIRTUAL LAB • 3D STEM</small></div></div>
+ <a class="back" href="/">← Trở về SchoolVerse</a>
+</header>
+<main>
+ <div class="hero"><h1>Phòng thí nghiệm ảo 3D</h1><p>Chọn môn học hoặc thí nghiệm. Phần này được đặt tách biệt nên không ghi đè giao diện chính SchoolVerse.</p></div>
+ <div class="grid">
+  <article class="card speed"><div class="icon">🚗</div><h2>Đo tốc độ xe lăn 3D</h2><p>Kéo trực tiếp hai cổng quang điện trên đường ray, thay đổi độ dốc và đo Δs–Δt.</p><div class="tags"><span>Kéo cổng quang</span><span>True 3D</span><span>Đo tốc độ</span></div><a class="open" href="labs/physics_speedcart.html">Mở thí nghiệm →</a></article>
+  <article class="card phy"><div class="icon">⚛️</div><h2>Phòng Vật lý 3D</h2><p>Ma sát, phản xạ ánh sáng, mạch điện, sóng âm, truyền nhiệt, đòn bẩy, nam châm điện, Ác-si-mét và khối lượng riêng.</p><div class="tags"><span>9 thí nghiệm</span><span>Dụng cụ 3D</span><span>Số liệu</span></div><a class="open" href="labs/physics_lab.html">Vào Vật lý →</a></article>
+  <article class="card chem"><div class="icon">⚗️</div><h2>Phòng Hóa học 3D</h2><p>Chỉ thị màu, kết tủa, trung hòa, CO₂, tốc độ phản ứng và lọc hỗn hợp.</p><div class="tags"><span>6 thí nghiệm</span><span>Hiện tượng</span><span>Nhật ký</span></div><a class="open" href="labs/chemistry_lab.html">Vào Hóa học →</a></article>
+  <article class="card bio"><div class="icon">🧬</div><h2>Phòng Sinh học 3D</h2><p>Tế bào hành, thẩm thấu, quang hợp, thoát hơi nước, nảy mầm và nhịp tim.</p><div class="tags"><span>6 thí nghiệm</span><span>Kính hiển vi</span><span>Sinh lý</span></div><a class="open" href="labs/biology_lab.html">Vào Sinh học →</a></article>
+ </div>
+ <div class="note"><b>Đường dẫn sau khi deploy:</b> <code>/virtual-lab/index.html</code>. Không thay thế <code>index.html</code> ở root của dự án hiện tại.</div>
+</main>
+</body>
+</html>

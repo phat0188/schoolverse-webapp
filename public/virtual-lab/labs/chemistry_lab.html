@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolVerse Chemistry Lab – True 3D Multi Experiments V1</title>
+<style>
+:root{
+ --cyan:#22a9c5;--cyan2:#4bd2d7;--blue:#177ff3;--ink:#173b6d;--muted:#7187a0;
+ --green:#29b96d;--orange:#ff972b;--red:#ef6258;--panel:rgba(255,255,255,.96);--line:#dce8f4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;font-family:Inter,Segoe UI,Arial,sans-serif;background:#edf6ff;color:var(--ink)}
+button,input,select{font:inherit} button{border:0;cursor:pointer}
+.app{height:100vh;display:grid;grid-template-rows:62px 1fr}
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 14px;background:#fff;border-bottom:1px solid #e1eaf3;box-shadow:0 6px 18px rgba(20,55,95,.06);z-index:30}
+.brand{display:flex;align-items:center;gap:9px}.mark{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#46cbd7,#168aa9);font-weight:1000}
+.brand b{font-size:20px}.brand b span{color:#ff8f2d}.brand small{display:block;font-size:7px;letter-spacing:1.7px;color:#8ca1ba;font-weight:900}
+.crumb{padding:8px 14px;border-radius:16px;background:#f5f9fd;border:1px solid #e4edf7;font-size:11px;font-weight:900;white-space:nowrap}
+.profile{justify-self:end;display:flex;align-items:center;gap:8px}.face{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#edf6ff;font-size:21px}.profile b,.profile small{display:block}.profile b{font-size:11px}.profile small{font-size:8px;color:var(--muted)}
+.main{display:grid;grid-template-columns:78px 1fr;min-height:0}
+.nav{background:linear-gradient(180deg,#0d477f,#103762);padding:8px 5px;display:grid;align-content:start;gap:4px}
+.nav button{height:51px;border-radius:13px;background:transparent;color:#fff;font-size:19px}.nav button small{display:block;font-size:6px;margin-top:2px;font-weight:900}.nav button.active{background:linear-gradient(180deg,#32bcca,#168eae)}
+.scene{position:relative;overflow:hidden;background:linear-gradient(180deg,#def7fb,#bcdee8)}
+.header{position:absolute;left:10px;right:10px;top:9px;height:66px;z-index:7;display:grid;grid-template-columns:1fr auto;gap:9px}
+.title,.stats{background:var(--panel);backdrop-filter:blur(10px);border-radius:18px;box-shadow:0 14px 30px rgba(16,48,86,.12)}
+.title{display:flex;align-items:center;gap:10px;padding:8px 12px}.title .icon{width:45px;height:45px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#51d3d9,#168eae);color:#fff;font-size:24px}
+.title h1{margin:0;font-size:19px}.title p{margin:2px 0 0;font-size:8px;color:var(--muted)}
+.stats{display:flex;gap:4px;padding:6px}.stat{min-width:78px;text-align:center;padding:6px;border-radius:10px;background:#f7fbff}.stat b,.stat small{display:block}.stat b{font-size:11px}.stat small{font-size:6px;color:var(--muted);font-weight:900}
+.workspace{position:absolute;left:10px;right:10px;top:84px;bottom:10px;z-index:5;display:grid;grid-template-columns:250px minmax(0,1fr) 325px;gap:9px;min-height:0}
+.catalog,.right{background:var(--panel);border-radius:19px;box-shadow:0 18px 40px rgba(15,48,86,.14)}
+.catalog{padding:10px;overflow:auto}.catalog h3{margin:0 0 8px;font-size:12px}.expList{display:grid;gap:6px}
+.exp{display:grid;grid-template-columns:34px 1fr;gap:7px;align-items:center;padding:8px;border-radius:12px;background:#f7fbff;border:1px solid #e1ebf4;text-align:left;color:var(--ink)}
+.exp.active{background:#e7fafd;border-color:#55bfd0;box-shadow:0 7px 16px rgba(34,169,197,.13)}
+.exp span{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;font-size:19px}.exp b,.exp small{display:block}.exp b{font-size:9px}.exp small{font-size:7px;color:var(--muted);margin-top:2px}
+.sim{display:grid;grid-template-rows:1fr auto;gap:7px;min-height:0}
+.viewport{position:relative;overflow:hidden;border-radius:21px;background:linear-gradient(180deg,#f9feff,#d9edf2);box-shadow:0 20px 45px rgba(14,48,86,.17);border:1px solid rgba(255,255,255,.9)}
+#stage3d{position:absolute;inset:0}#stage3d canvas{display:block;width:100%!important;height:100%!important}
+.badge{position:absolute;left:12px;top:11px;z-index:4;padding:6px 8px;border-radius:999px;background:rgba(232,251,253,.94);color:#087a9e;font-size:7px;font-weight:900}
+.tip{position:absolute;right:12px;top:11px;z-index:4;padding:6px 8px;border-radius:999px;background:rgba(255,246,220,.96);color:#97650f;font-size:7px;font-weight:900;max-width:50%}
+.readout{position:absolute;right:12px;bottom:11px;z-index:4;width:280px;padding:9px;border-radius:15px;background:rgba(255,255,255,.94);border:1px solid #dce8f4;box-shadow:0 11px 24px rgba(15,48,86,.11)}
+.readout h4{margin:0 0 6px;font-size:9px}.readgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.readcell{padding:6px;border-radius:9px;background:#f5f9fd;text-align:center}.readcell small,.readcell b{display:block}.readcell small{font-size:5px;color:var(--muted);font-weight:900}.readcell b{font:1000 11px Consolas,monospace;margin-top:2px}
+.controls{display:flex;gap:7px;align-items:end;flex-wrap:wrap;padding:8px 9px;border-radius:17px;background:var(--panel);box-shadow:0 14px 32px rgba(15,48,86,.13)}
+.controls .group{min-width:145px;flex:1}.controls label{display:block;font-size:7px;color:var(--muted);font-weight:900;margin-bottom:3px}.controls input[type=range]{width:100%;accent-color:var(--cyan)}.controls select{height:38px;width:100%;border:1px solid #d8e5f1;border-radius:10px;padding:0 8px;background:#fff;color:var(--ink);font-size:9px}
+.btn{height:39px;padding:0 11px;border-radius:11px;font-weight:900;font-size:9px}.primary{background:linear-gradient(180deg,#3cc5d2,#168fad);color:white}.secondary{background:#edf8fb;color:#0b7e9c;border:1px solid #d7edf3}.danger{background:#fff1ef;color:#b94c44;border:1px solid #f2d0cc}
+.right{padding:10px;display:grid;grid-template-rows:auto auto 1fr;gap:8px;min-height:0}
+.mission,.panel{border:1px solid #e0eaf4;border-radius:14px;padding:10px;background:#fbfdff}.tag{display:inline-flex;padding:5px 7px;border-radius:999px;background:#e7fafd;color:#087a9e;font-size:7px;font-weight:900}.mission h3{margin:7px 0 4px;font-size:13px}.mission p{margin:0;color:var(--muted);font-size:8px;line-height:1.4}
+.panel h4{margin:0 0 7px;font-size:10px}.status{font-size:8px;line-height:1.5;color:#48617b}.status b{color:var(--ink)}
+.log{overflow:auto}.log table{width:100%;border-collapse:collapse;font-size:7px}.log th,.log td{padding:5px 3px;border-bottom:1px solid #e7eef6;text-align:center}.log th{position:sticky;top:0;background:#fbfdff;color:#6b8099}
+.loading{position:absolute;inset:0;display:grid;place-items:center;background:#e9f8fb;color:#315273;font-weight:900;z-index:10}.loading.hide{display:none}
+@media(max-width:1200px){.workspace{grid-template-columns:215px minmax(0,1fr) 285px}.readout{width:235px}}
+</style>
+
+<style id="sv-addon-nav">
+.sv-back{position:fixed;left:88px;bottom:12px;z-index:9999;text-decoration:none;background:rgba(255,255,255,.96);color:#173b6d;border:1px solid #dbe7f2;border-radius:12px;padding:8px 11px;font:900 10px Inter,Segoe UI,Arial,sans-serif;box-shadow:0 8px 20px rgba(15,48,86,.14)}
+.sv-back:hover{transform:translateY(-1px)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="brand"><div class="mark">S</div><div><b>School<span>Verse</span></b><small>LEARN • PLAY • GROW</small></div></div>
+ <div class="crumb">⚗️ Phòng Hóa học 3D › <b id="crumbName">Chỉ thị màu</b></div>
+ <div class="profile"><div class="face">👧</div><div><b>Trần Gia Hân</b><small>Lớp 8A1 • Lv.10</small></div></div>
+</header>
+<div class="main">
+<nav class="nav">
+ <button>🏠<small>Sân trường</small></button><button>🎯<small>Nhiệm vụ</small></button><button>🗺️<small>Bản đồ</small></button><button>🧪<small>Thực hành</small></button><button class="active">⚗️<small>Hóa học</small></button><button>🏆<small>Hồ sơ</small></button>
+</nav>
+<section class="scene">
+ <div class="header">
+   <div class="title"><div class="icon" id="titleIcon">🧪</div><div><h1 id="titleText">Nhận biết dung dịch bằng chỉ thị màu</h1><p id="titleSub">Rót dung dịch • nhỏ chỉ thị • quan sát màu</p></div></div>
+   <div class="stats"><div class="stat"><b>+50 XP</b><small>PHẦN THƯỞNG</small></div><div class="stat"><b id="trial">0</b><small>LẦN THỬ</small></div><div class="stat"><b id="score">--</b><small>KẾT QUẢ</small></div></div>
+ </div>
+
+ <div class="workspace">
+   <aside class="catalog"><h3>⚗️ Thí nghiệm Hóa học</h3><div class="expList" id="expList"></div></aside>
+   <div class="sim">
+     <div class="viewport">
+       <div id="stage3d"></div><div class="loading" id="loading">Đang khởi tạo phòng Hóa học 3D…</div>
+       <div class="badge">⚗️ TRUE 3D CHEMISTRY LAB</div><div class="tip" id="tip">🖱️ Xoay/zoom để quan sát dụng cụ và hiện tượng</div>
+       <div class="readout"><h4 id="readTitle">📟 Số liệu</h4><div class="readgrid" id="readGrid"></div></div>
+     </div>
+     <div class="controls" id="controls"></div>
+   </div>
+   <aside class="right">
+     <div class="mission"><span class="tag">🎯 NHIỆM VỤ</span><h3 id="missionTitle"></h3><p id="missionText"></p></div>
+     <div class="panel"><h4>🔬 Hiện tượng / kết luận</h4><div class="status" id="status"></div></div>
+     <div class="panel log"><h4>📊 Nhật ký thí nghiệm</h4><div id="log"></div></div>
+   </aside>
+ </div>
+</section>
+</div>
+</div>
+
+<script type="module">
+let THREE, OrbitControls;
+try {
+  THREE = await import('https://esm.sh/three@0.180.0');
+  ({OrbitControls} = await import('https://esm.sh/three@0.180.0/examples/jsm/controls/OrbitControls.js'));
+} catch (err) {
+  document.getElementById('loading').textContent = 'Không tải được thư viện 3D. Hãy kiểm tra kết nối Internet hoặc tải lại trang.';
+  console.error(err);
+  throw err;
+}
+
+const EXPS=[
+{id:'indicator',icon:'🧪',name:'Chỉ thị màu',sub:'Axit • bazơ • trung tính'},
+{id:'precip',icon:'🌨️',name:'Tạo kết tủa',sub:'Trộn dung dịch • quan sát chất rắn'},
+{id:'neutral',icon:'🌡️',name:'Trung hòa axit–bazơ',sub:'pH • nhiệt độ • tỉ lệ'},
+{id:'co2',icon:'🫧',name:'Điều chế khí CO₂',sub:'Bình phản ứng • ống dẫn • nước vôi'},
+{id:'rate',icon:'⏱️',name:'Tốc độ phản ứng',sub:'Nhiệt độ • nồng độ • kích thước'},
+{id:'filter',icon:'🧻',name:'Tách hỗn hợp bằng lọc',sub:'Phễu • giấy lọc • nước cát'}
+];
+
+const expList=document.getElementById('expList');
+expList.innerHTML=EXPS.map((e,i)=>`<button class="exp ${i===0?'active':''}" data-id="${e.id}"><span>${e.icon}</span><div><b>${e.name}</b><small>${e.sub}</small></div></button>`).join('');
+
+const mount=document.getElementById('stage3d'),loading=document.getElementById('loading');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xeaf8fb);scene.fog=new THREE.Fog(0xeaf8fb,18,35);
+const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(9.5,6.5,10.5);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;mount.appendChild(renderer.domElement);
+const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,.8,0);orbit.minDistance=6;orbit.maxDistance=22;orbit.maxPolarAngle=Math.PI*.49;
+scene.add(new THREE.HemisphereLight(0xffffff,0x6b8c9a,2.1));const sun=new THREE.DirectionalLight(0xffffff,2.7);sun.position.set(6,10,7);sun.castShadow=true;scene.add(sun);
+
+function mat(c,m=.12,r=.5){return new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r})}
+function box(w,h,d,c,m=.12,r=.5){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c,m,r));o.castShadow=o.receiveShadow=true;return o}
+function cyl(rt,rb,h,c,m=.12,r=.5){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,32),mat(c,m,r));o.castShadow=o.receiveShadow=true;return o}
+function sphere(r,c,m=.12,rough=.5){const o=new THREE.Mesh(new THREE.SphereGeometry(r,28,18),mat(c,m,rough));o.castShadow=o.receiveShadow=true;return o}
+function label(text,bg='#fff',fg='#173b6d'){
+ const c=document.createElement('canvas');c.width=256;c.height=100;const x=c.getContext('2d');x.fillStyle=bg;x.fillRect(0,0,256,100);x.fillStyle=fg;x.font='900 42px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(text,128,50);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return new THREE.Mesh(new THREE.PlaneGeometry(1.5,.58),new THREE.MeshBasicMaterial({map:tex}));
+}
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(34,24),mat(0xd2e5ea,.02,.85));floor.rotation.x=-Math.PI/2;floor.position.y=-1;floor.receiveShadow=true;scene.add(floor);
+const grid=new THREE.GridHelper(30,30,0xa5c2cb,0xc9dfe5);grid.position.y=-.99;scene.add(grid);
+const root=new THREE.Group();scene.add(root);
+
+let logs=[],trial=0,timer=null,cleanup=null;
+function clearRoot(){
+ if(timer){clearInterval(timer);timer=null} if(cleanup)try{cleanup()}catch{}
+ logs=[];trial=0;document.getElementById('trial').textContent='0';document.getElementById('score').textContent='--';renderLog();
+ while(root.children.length){const o=root.children.pop();o.traverse?.(x=>{x.geometry?.dispose?.();if(x.material){if(Array.isArray(x.material))x.material.forEach(m=>m.dispose?.());else x.material.dispose?.()}})}
+}
+function addTable(){
+ const top=box(13.5,.38,5.5,0x7b98ac,.1,.55);top.position.y=-.62;root.add(top);
+ for(const x of [-6,6])for(const z of [-2,2]){const l=box(.34,1.6,.34,0x40576a,.38,.35);l.position.set(x,-1.45,z);root.add(l)}
+}
+function setMeta(icon,title,sub,mission,text,tip='🖱️ Xoay/zoom để quan sát dụng cụ và hiện tượng'){
+ document.getElementById('titleIcon').textContent=icon;document.getElementById('titleText').textContent=title;document.getElementById('titleSub').textContent=sub;document.getElementById('crumbName').textContent=title;document.getElementById('missionTitle').textContent=mission;document.getElementById('missionText').textContent=text;document.getElementById('tip').textContent=tip;
+}
+function setRead(title,items){document.getElementById('readTitle').textContent=title;document.getElementById('readGrid').innerHTML=items.map(x=>`<div class="readcell"><small>${x[0]}</small><b id="${x[2]}">${x[1]}</b></div>`).join('')}
+function setControls(html){document.getElementById('controls').innerHTML=html}
+function setStatus(html){document.getElementById('status').innerHTML=html}
+function logRow(row){logs.push(row);trial++;document.getElementById('trial').textContent=trial;renderLog()}
+function renderLog(){document.getElementById('log').innerHTML=!logs.length?'<div style="font-size:8px;color:#8da1b8;text-align:center;padding:18px">Chưa có số liệu.</div>':'<table><tbody>'+logs.map((r,i)=>'<tr><td>'+(i+1)+'</td>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function bottle(x,z,text,color=0xdfeef4){
+ const g=new THREE.Group();const body=cyl(.55,.5,1.65,color,.03,.58);body.material.transparent=true;body.material.opacity=.55;g.add(body);const neck=cyl(.24,.24,.5,0xdfeef4,.03,.58);neck.position.y=1.05;neck.material.transparent=true;neck.material.opacity=.65;g.add(neck);const cap=cyl(.27,.27,.18,0x33495a,.08,.48);cap.position.y=1.38;g.add(cap);const lab=label(text);lab.position.set(0,.25,.53);g.add(lab);g.position.set(x,0,z);root.add(g);return g;
+}
+function beaker(x,z,liquidColor=0x5bc2ef){
+ const g=new THREE.Group();const glass=new THREE.Mesh(new THREE.CylinderGeometry(1.0,.9,2.0,32,1,true),new THREE.MeshStandardMaterial({color:0xa7ddf4,transparent:true,opacity:.26,roughness:.08,side:THREE.DoubleSide}));glass.position.y=.85;g.add(glass);const liq=cyl(.86,.82,1.0,liquidColor,.02,.55);liq.position.y=.2;liq.material.transparent=true;liq.material.opacity=.55;g.add(liq);g.position.set(x,0,z);root.add(g);return {g,liq};
+}
+function resetCam(){camera.position.set(9.5,6.5,10.5);orbit.target.set(0,.8,0);orbit.update()}
+
+function buildIndicator(){
+ clearRoot();addTable();setMeta('🧪','Nhận biết dung dịch bằng chỉ thị màu','Quỳ tím • phenolphthalein • chỉ thị vạn năng','Phân loại axit – bazơ – trung tính','Chọn mẫu dung dịch và chất chỉ thị để quan sát màu đặc trưng.');
+ setRead('📟 Kết quả',[['MẪU','HCl','r1'],['pH','1.5','r2'],['MÀU','Đỏ','r3']]);
+ setControls(`<div class="group"><label>Mẫu dung dịch</label><select id="sample"><option value="hcl">HCl</option><option value="naoh">NaOH</option><option value="nacl">NaCl</option></select></div><div class="group"><label>Chỉ thị</label><select id="ind"><option value="universal">Vạn năng</option><option value="litmus">Quỳ tím</option><option value="phenol">Phenolphthalein</option></select></div><button class="btn primary" id="test">💧 Nhỏ chỉ thị</button><button class="btn secondary" id="record">Ghi</button>`);
+ const rack=box(5.2,.35,1.8,0x906b4d,.05,.72);rack.position.set(1.2,.1,.4);root.add(rack);
+ const tube=new THREE.Group();const glass=new THREE.Mesh(new THREE.CylinderGeometry(.42,.32,2.7,28,1,true),new THREE.MeshStandardMaterial({color:0xbfe8f5,transparent:true,opacity:.3,side:THREE.DoubleSide}));glass.position.y=1.35;tube.add(glass);const liq=cyl(.29,.27,.9,0xf2f8fb,.02,.55);liq.position.y=.45;liq.material.transparent=true;liq.material.opacity=.72;tube.add(liq);tube.position.set(1.2,.2,.4);root.add(tube);
+ bottle(-3.7,-1,'HCl');bottle(-2.2,-1,'NaOH');bottle(-.7,-1,'NaCl');
+ const data={hcl:{ph:1.5,type:'Axit'},naoh:{ph:12.5,type:'Bazơ'},nacl:{ph:7,type:'Trung tính'}};
+ function col(ind,ph){if(ind==='phenol')return ph>8.2?0xf06aa6:0xf7fbff;if(ind==='litmus')return ph<7?0xe94255:ph>7?0x3567d8:0x784bb8;if(ph<3)return 0xe83c3c;if(ph<6)return 0xf0b335;if(ph<8)return 0x4dbf63;if(ph<11)return 0x466bd9;return 0x7544b8}
+ function run(){const s=document.getElementById('sample').value,i=document.getElementById('ind').value,d=data[s],c=col(i,d.ph);liq.material.color.setHex(c);document.getElementById('r1').textContent=s.toUpperCase();document.getElementById('r2').textContent=d.ph.toFixed(1);document.getElementById('r3').textContent=d.type;setStatus(`<b>Hiện tượng:</b> dung dịch đổi màu theo chất chỉ thị.<br><b>Kết luận:</b> ${s.toUpperCase()} là ${d.type.toLowerCase()} (pH ${d.ph}).`)}
+ document.getElementById('test').onclick=run;document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);run();resetCam();
+}
+
+function buildPrecip(){
+ clearRoot();addTable();setMeta('🌨️','Phản ứng tạo kết tủa 3D','Rót hai dung dịch • quan sát chất rắn xuất hiện','Quan sát dấu hiệu phản ứng hóa học','Chọn cặp dung dịch, trộn trong cốc và quan sát kết tủa xuất hiện.');
+ setRead('📟 Phản ứng',[['CẶP CHẤT','AgNO₃ + NaCl','r1'],['KẾT TỦA','AgCl','r2'],['MÀU','Trắng','r3']]);
+ setControls(`<div class="group"><label>Cặp dung dịch</label><select id="pair"><option value="ag">AgNO₃ + NaCl</option><option value="cu">CuSO₄ + NaOH</option><option value="ba">BaCl₂ + Na₂SO₄</option></select></div><button class="btn primary" id="mix">🧪 Trộn dung dịch</button><button class="btn secondary" id="record">Ghi</button>`);
+ bottle(-4,-1,'A');bottle(-2.5,-1,'B');const b=beaker(1,0,0xcceeff);
+ const precip=new THREE.Group();root.add(precip);
+ for(let i=0;i<75;i++){const p=sphere(.04,0xffffff,.05,.8);p.position.set(1+(Math.random()-.5)*1.25,-.15+Math.random()*.65,(Math.random()-.5)*1.1);p.visible=false;precip.add(p)}
+ const data={ag:{pair:'AgNO₃ + NaCl',name:'AgCl',color:0xf5f5f2,label:'Trắng'},cu:{pair:'CuSO₄ + NaOH',name:'Cu(OH)₂',color:0x3a9ae8,label:'Xanh lam'},ba:{pair:'BaCl₂ + Na₂SO₄',name:'BaSO₄',color:0xffffff,label:'Trắng'}};
+ function mix(){const d=data[document.getElementById('pair').value];let i=0;precip.children.forEach(p=>{p.material.color.setHex(d.color);p.visible=false});timer=setInterval(()=>{if(i<precip.children.length){precip.children[i].visible=true;i+=3}else{clearInterval(timer);timer=null}},25);document.getElementById('r1').textContent=d.pair;document.getElementById('r2').textContent=d.name;document.getElementById('r3').textContent=d.label;setStatus(`<b>Hiện tượng:</b> xuất hiện chất rắn ${d.label.toLowerCase()} trong dung dịch.<br><b>Kết luận:</b> có phản ứng hóa học tạo kết tủa ${d.name}.`)}
+ document.getElementById('mix').onclick=mix;document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);mix();resetCam();
+}
+
+function buildNeutral(){
+ clearRoot();addTable();setMeta('🌡️','Trung hòa axit–bazơ 3D','HCl • NaOH • pH • nhiệt độ','Tìm tỉ lệ trung hòa','Điều chỉnh thể tích HCl và NaOH, sau đó trộn để quan sát pH và nhiệt độ.');
+ setRead('📟 Kết quả',[['pH','7.0','r1'],['NHIỆT ĐỘ','25.0 °C','r2'],['KẾT LUẬN','Trung tính','r3']]);
+ setControls(`<div class="group"><label>Thể tích HCl</label><input id="acid" type="range" min="10" max="100" value="50"></div><div class="group"><label>Thể tích NaOH</label><input id="base" type="range" min="10" max="100" value="50"></div><button class="btn primary" id="mix">🧪 Trộn</button><button class="btn secondary" id="record">Ghi</button>`);
+ bottle(-4,-1,'HCl');bottle(-2.4,-1,'NaOH');const b=beaker(1,0,0xeaf5ff);
+ const thermo=box(.12,2.3,.12,0xf7f9fc,.05,.68);thermo.position.set(2.4,.7,0);root.add(thermo);const mercury=box(.05,.8,.05,0xe54e49,.05,.62);mercury.position.set(2.4,.05,0);root.add(mercury);
+ function mix(){const a=+document.getElementById('acid').value,n=+document.getElementById('base').value,d=n-a;let ph=d===0?7:d>0?Math.min(13,7+d/12):Math.max(1,7+d/12);let temp=25+Math.min(a,n)/20;document.getElementById('r1').textContent=ph.toFixed(1);document.getElementById('r2').textContent=temp.toFixed(1)+' °C';document.getElementById('r3').textContent=ph<6.5?'Axit dư':ph>7.5?'Bazơ dư':'Trung tính';b.liq.material.color.setHex(ph<6.5?0xf6c1b6:ph>7.5?0xbad7f6:0xcdf0d5);mercury.scale.y=.7+(temp-25)/15;setStatus(`<b>Hiện tượng:</b> dung dịch ấm lên khi trung hòa.<br><b>pH sau trộn:</b> ${ph.toFixed(1)}.<br><b>Kết luận:</b> ${document.getElementById('r3').textContent}.`)}
+ document.getElementById('mix').onclick=mix;document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);mix();resetCam();
+}
+
+function buildCO2(){
+ clearRoot();addTable();setMeta('🫧','Điều chế và nhận biết khí CO₂ 3D','Bình phản ứng • ống dẫn • nước vôi trong','Điều chế và kiểm chứng khí CO₂','Cho CaCO₃ phản ứng với HCl, dẫn khí tạo thành vào nước vôi trong.');
+ setRead('📟 Khí CO₂',[['TỐC ĐỘ KHÍ','0 ml/s','r1'],['NƯỚC VÔI','Trong','r2'],['KẾT LUẬN','--','r3']]);
+ setControls(`<div class="group"><label>Lượng HCl</label><input id="acid" type="range" min="20" max="100" value="60"></div><button class="btn primary" id="start">▶ Bắt đầu phản ứng</button><button class="btn secondary" id="record">Ghi</button>`);
+ const flask=new THREE.Group();const body=sphere(1.1,0xddeef4,.02,.18);body.material.transparent=true;body.material.opacity=.3;flask.add(body);const neck=cyl(.32,.32,1.3,0xddeef4,.02,.18);neck.position.y=1.35;neck.material.transparent=true;neck.material.opacity=.35;flask.add(neck);flask.position.set(-2,.2,0);root.add(flask);
+ for(let i=0;i<12;i++){const chip=box(.22,.16,.2,0xd6c8a3,.02,.75);chip.position.set(-2+(Math.random()-.5),-.3+Math.random()*.5,(Math.random()-.5));root.add(chip)}
+ const tubeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-2,1.9,0),new THREE.Vector3(0,2.2,0),new THREE.Vector3(2.3,1,0)]),new THREE.LineBasicMaterial({color:0x5b7789}));root.add(tubeLine);
+ const lime=beaker(2.3,0,0xeef7fb);
+ const bubbles=[];for(let i=0;i<25;i++){const b=sphere(.05,0xffffff,.01,.2);b.material.transparent=true;b.material.opacity=.7;b.position.set(2.3,-.3+Math.random()*.7,(Math.random()-.5)*.8);b.visible=false;root.add(b);bubbles.push(b)}
+ let cloud=0;
+ document.getElementById('start').onclick=()=>{if(timer)clearInterval(timer);let t=0;timer=setInterval(()=>{t++;const rate=+document.getElementById('acid').value/10;document.getElementById('r1').textContent=rate.toFixed(0)+' ml/s';bubbles.forEach((b,i)=>{b.visible=i<t%25;b.position.y=-.35+((t+i)%20)/20*1.3});cloud=Math.min(1,cloud+.035);lime.liq.material.color.setRGB(1,1-cloud*.2,1-cloud*.2);lime.liq.material.opacity=.5+cloud*.35;if(cloud>.75){document.getElementById('r2').textContent='Vẩn đục';document.getElementById('r3').textContent='Có CO₂';setStatus('<b>Hiện tượng:</b> sủi bọt khí; nước vôi trong dần vẩn đục.<br><b>Kết luận:</b> khí sinh ra là CO₂.');clearInterval(timer);timer=null}},120)};
+ document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);setStatus('Bấm “Bắt đầu phản ứng” để quan sát.');resetCam();
+}
+
+function buildRate(){
+ clearRoot();addTable();setMeta('⏱️','Khảo sát tốc độ phản ứng 3D','Nhiệt độ • nồng độ • kích thước hạt','So sánh tốc độ phản ứng','Thay đổi các yếu tố rồi theo dõi tốc độ sinh khí và thời gian phản ứng.');
+ setRead('📟 Tốc độ phản ứng',[['TỐC ĐỘ','--','r1'],['THỜI GIAN','-- s','r2'],['KHÍ TẠO RA','0 ml','r3']]);
+ setControls(`<div class="group"><label>Nhiệt độ</label><input id="temp" type="range" min="20" max="60" value="25"></div><div class="group"><label>Nồng độ tương đối</label><input id="conc" type="range" min="1" max="5" value="3"></div><div class="group"><label>Kích thước CaCO₃</label><select id="size"><option value="1">Miếng lớn</option><option value="1.6">Hạt nhỏ</option><option value="2.4">Bột</option></select></div><button class="btn primary" id="start">▶ Chạy</button><button class="btn secondary" id="record">Ghi</button>`);
+ const flask=beaker(0,0,0xeaf4ff);const bubbles=[];for(let i=0;i<28;i++){const b=sphere(.045,0xffffff,.01,.2);b.material.transparent=true;b.material.opacity=.75;b.visible=false;b.position.set((Math.random()-.5)*1.2,-.2+Math.random(),(Math.random()-.5));root.add(b);bubbles.push(b)}
+ document.getElementById('start').onclick=()=>{if(timer)clearInterval(timer);let sec=0,gas=0;const factor=(+document.getElementById('temp').value/25)*(+document.getElementById('conc').value/3)*(+document.getElementById('size').value);const rate=8*factor;document.getElementById('r1').textContent=rate.toFixed(1)+' ml/s';timer=setInterval(()=>{sec++;gas=Math.min(200,gas+rate);document.getElementById('r2').textContent=sec+' s';document.getElementById('r3').textContent=gas.toFixed(0)+' ml';bubbles.forEach((b,i)=>b.visible=i<Math.min(28,Math.round(rate)));if(gas>=200){clearInterval(timer);timer=null;setStatus(`<b>Kết luận:</b> phản ứng nhanh hơn khi nhiệt độ cao hơn, nồng độ lớn hơn và chất rắn có kích thước nhỏ hơn.`)}},250)};
+ document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);setStatus('Điều chỉnh các yếu tố rồi bấm Chạy để so sánh.');resetCam();
+}
+
+function buildFilter(){
+ clearRoot();addTable();setMeta('🧻','Tách hỗn hợp bằng lọc 3D','Phễu • giấy lọc • nước cát • cốc hứng','Tách chất rắn không tan khỏi chất lỏng','Rót hỗn hợp nước–cát qua phễu có giấy lọc, quan sát cặn và nước lọc.');
+ setRead('📟 Kết quả lọc',[['NƯỚC LỌC','0 ml','r1'],['CẶN','0 g','r2'],['TRẠNG THÁI','Chưa lọc','r3']]);
+ setControls(`<div class="group"><label>Lượng hỗn hợp</label><input id="amount" type="range" min="50" max="200" value="120"></div><button class="btn primary" id="filter">🧪 Tiến hành lọc</button><button class="btn secondary" id="record">Ghi</button>`);
+ const stand=box(.22,3.5,.22,0x637988,.45,.35);stand.position.set(0,.75,0);root.add(stand);const arm=box(2,.08,.08,0x637988,.45,.35);arm.position.set(1,1.9,0);root.add(arm);
+ const funnel=new THREE.Mesh(new THREE.ConeGeometry(1.0,1.8,32,1,true),new THREE.MeshStandardMaterial({color:0xc9ecf6,transparent:true,opacity:.35,side:THREE.DoubleSide}));funnel.rotation.z=Math.PI;funnel.position.set(1.6,1.2,0);root.add(funnel);
+ const paper=new THREE.Mesh(new THREE.ConeGeometry(.86,1.55,32,1,true),new THREE.MeshStandardMaterial({color:0xf7f4df,transparent:true,opacity:.8,side:THREE.DoubleSide}));paper.rotation.z=Math.PI;paper.position.set(1.6,1.22,0);root.add(paper);
+ const recv=beaker(1.6,0,0xeef7fb);recv.g.position.y=-.4;
+ const source=beaker(-3,0,0xc7a87c);source.liq.material.color.setHex(0xb9946e);
+ const sand=[];for(let i=0;i<45;i++){const s=sphere(.035,0x9c7a4f,.02,.9);s.position.set(1.6,.6+Math.random()*.45,(Math.random()-.5)*.7);s.visible=false;root.add(s);sand.push(s)}
+ document.getElementById('filter').onclick=()=>{if(timer)clearInterval(timer);let t=0;const total=+document.getElementById('amount').value;timer=setInterval(()=>{t++;const ml=Math.min(total,t*4);recv.liq.scale.y=Math.max(.05,ml/total);sand.forEach((s,i)=>s.visible=i<Math.min(45,Math.round(t/2)));document.getElementById('r1').textContent=ml.toFixed(0)+' ml';document.getElementById('r2').textContent=(ml*.08).toFixed(1)+' g';document.getElementById('r3').textContent=ml>=total?'Đã lọc':'Đang lọc';if(ml>=total){clearInterval(timer);timer=null;setStatus('<b>Hiện tượng:</b> cát bị giữ trên giấy lọc, nước chảy xuống cốc hứng.<br><b>Kết luận:</b> lọc tách được chất rắn không tan khỏi chất lỏng.')}},80)};
+ document.getElementById('record').onclick=()=>logRow([document.getElementById('r1').textContent,document.getElementById('r2').textContent,document.getElementById('r3').textContent]);setStatus('Bấm “Tiến hành lọc” để bắt đầu.');resetCam();
+}
+
+const builders={indicator:buildIndicator,precip:buildPrecip,neutral:buildNeutral,co2:buildCO2,rate:buildRate,filter:buildFilter};
+function switchExp(id){document.querySelectorAll('.exp').forEach(b=>b.classList.toggle('active',b.dataset.id===id));builders[id]()}
+document.querySelectorAll('.exp').forEach(b=>b.onclick=()=>switchExp(b.dataset.id));
+function resize(){const w=mount.clientWidth,h=mount.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(mount);resize();loading.classList.add('hide');switchExp('indicator');
+(function loop(){orbit.update();renderer.render(scene,camera);requestAnimationFrame(loop)})();
+</script>
+<a class="sv-back" href="../index.html">← Phòng thí nghiệm</a>
+</body>
+</html>

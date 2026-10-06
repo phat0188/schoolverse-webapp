@@ -8,7 +8,7 @@ const timetable=[['07:00','Chào cờ / Điểm danh','Sân trường','🏫'],[
 const locations=[
 {id:'campus',icon:'🏫',name:'Sân trường',sub:'Trung tâm',desc:'Khu vực trung tâm để nhận nhiệm vụ, gặp NPC và bắt đầu hành trình.',x:48,y:47,route:'/campus'},
 {id:'classroom',icon:'📘',name:'Khu lớp học',sub:'Học tập',desc:'Tham gia tiết học, trả lời câu hỏi và tích lũy XP học tập.',x:23,y:17,route:'/classroom'},
-{id:'stem',icon:'🧪',name:'Phòng STEM',sub:'Sáng tạo',desc:'Làm thí nghiệm, giải nhiệm vụ bí mật và thử thách KHTN - công nghệ.',x:72,y:18},
+{id:'stem',icon:'🧪',name:'Phòng STEM',sub:'Sáng tạo',desc:'Làm thí nghiệm, giải nhiệm vụ bí mật và thử thách KHTN - công nghệ.',x:72,y:18,external:'/virtual-lab/index.html'},
 {id:'library',icon:'📚',name:'Thư viện',sub:'Tài liệu',desc:'Đọc tài liệu, tìm sách và hoàn thành nhiệm vụ học tập.',x:79,y:42},
 {id:'football',icon:'⚽',name:'Sân bóng',sub:'Vận động',desc:'Tham gia mini game thể thao và nhiệm vụ rèn luyện.',x:13,y:39},
 {id:'garden',icon:'🌿',name:'Vườn sinh học',sub:'Thiên nhiên',desc:'Khám phá cây xanh, môi trường và các nhiệm vụ sinh học.',x:17,y:72},
@@ -35,7 +35,7 @@ function Hud(){const pct=Math.round(student.xp/student.xpNext*100);return <heade
         <div><b>{student.name}</b><small>Lv.{student.level} • {student.className}</small><div className='xp'><span style={{width:pct+'%'}}/></div></div>
       </div>
     </header>}
-function Shell({children}){return <><Hud/><nav className='gamenav glass'>{[['/campus','🏫','Sân trường'],['/missions','🎯','Nhiệm vụ'],['/map','🗺️','Bản đồ'],['/schedule','🗓️','Lịch học'],['/classroom','📘','Lớp học'],['/profile','🏆','Hồ sơ']].map(([to,ic,t])=><NavLink key={to} to={to} className={({isActive})=>isActive?'active':''}><span>{ic}</span><small>{t}</small></NavLink>)}</nav><main className='main'>{children}</main></>}
+function Shell({children}){return <><Hud/><nav className='gamenav glass'>{[['/campus','🏫','Sân trường'],['/missions','🎯','Nhiệm vụ'],['/map','🗺️','Bản đồ'],['/schedule','🗓️','Lịch học'],['/classroom','📘','Lớp học'],['/profile','🏆','Hồ sơ']].map(([to,ic,t])=><NavLink key={to} to={to} className={({isActive})=>isActive?'active':''}><span>{ic}</span><small>{t}</small></NavLink>)}<a href='/virtual-lab/index.html'><span>🧪</span><small>Thí nghiệm 3D</small></a></nav><main className='main'>{children}</main></>}
 function Campus(){const nav=useNavigate();const done=seedMissions.filter(m=>m.progress>=m.total).length;return <Shell><section className='campus campus-v11'>
       <img src={campusImg} alt='Sân trường Trường THCS và THPT Lương Thế Vinh'/>
       <div className='campus-vignette'/>
@@ -111,8 +111,8 @@ function MapPage(){const nav=useNavigate();const [sel,setSel]=useState(locations
           </div>
           <p>{sel.desc}</p>
           <div className='mapinfo-actions-v12'>
-            <button className='primary compact' disabled={!sel.route} onClick={()=>sel.route&&nav(sel.route)}>
-              {sel.route?'Đi đến khu vực →':'Sắp mở khóa'}
+            <button className='primary compact' disabled={!sel.route&&!sel.external} onClick={()=>{if(sel.external)location.href=sel.external;else if(sel.route)nav(sel.route)}}>
+              {(sel.route||sel.external)?'Đi đến khu vực →':'Sắp mở khóa'}
             </button>
             <button className='soft map-center-btn' onClick={()=>setSel(locations[0])}>🎯 Về Sân trường</button>
           </div>
@@ -234,7 +234,7 @@ function Classroom(){
       <button>📝<span>Ghi chú</span></button>
       <button>📁<span>Tài liệu</span></button>
       <button>▶️<span>Video</span></button>
-      <button>🧪<span>Thí nghiệm</span></button>
+      <button onClick={()=>location.href='/virtual-lab/index.html'}>🧪<span>Thí nghiệm</span></button>
     </div>
 
     {finished&&<div className='lesson-finish-overlay-v131'>

@@ -1,92 +1,13 @@
 <!doctype html>
 <html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SchoolVerse Virtual Lab</title>
-<style>
-:root{
-  --ink:#173b6d;--muted:#7187a0;--blue:#187ff0;--green:#2dbb72;
-  --cyan:#25a9c5;--orange:#ff972b;--card:#fff;--line:#dfe9f3;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:
-radial-gradient(circle at 15% 15%,#dff3ff 0 18%,transparent 40%),
-radial-gradient(circle at 85% 15%,#e5faed 0 18%,transparent 42%),
-linear-gradient(180deg,#f8fbff,#eef5fb);color:var(--ink)}
-header{
-  height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;
-  justify-content:space-between;padding:0 28px;box-shadow:0 8px 24px rgba(15,48,86,.07);position:sticky;top:0;z-index:3
-}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:1000;background:linear-gradient(145deg,#43adff,#1775e8)}
-.brand b{font-size:22px}.brand b span{color:#ff8f2d}.brand small{display:block;font-size:8px;letter-spacing:1.8px;color:#8da2b9;font-weight:900}
-.badge{padding:8px 12px;border-radius:999px;background:#f4f8fc;border:1px solid #e1eaf3;color:#567089;font-size:11px;font-weight:900}
-main{max-width:1180px;margin:auto;padding:36px 24px 50px}
-.hero{text-align:center;margin-bottom:28px}
-.hero h1{font-size:36px;margin:0 0 10px}.hero p{margin:0 auto;max-width:760px;color:var(--muted);line-height:1.6;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.card{background:rgba(255,255,255,.94);border:1px solid #e2ebf4;border-radius:24px;padding:22px;box-shadow:0 18px 44px rgba(15,48,86,.10);transition:.2s transform,.2s box-shadow}
-.card:hover{transform:translateY(-3px);box-shadow:0 24px 50px rgba(15,48,86,.14)}
-.card .icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:31px;margin-bottom:15px}
-.card h2{margin:0 0 7px;font-size:21px}.card p{margin:0 0 15px;color:var(--muted);font-size:12px;line-height:1.55}
-.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}.tags span{padding:5px 8px;border-radius:999px;background:#f4f8fc;border:1px solid #e1eaf3;font-size:8px;font-weight:900}
-a.open{display:inline-flex;text-decoration:none;padding:11px 15px;border-radius:13px;color:#fff;font-weight:1000;font-size:11px}
-.physics .icon{background:#eaf5ff}.physics a{background:linear-gradient(180deg,#3198ff,#1778e8)}
-.speed .icon{background:#fff2e7}.speed a{background:linear-gradient(180deg,#ffad50,#ee8220)}
-.chem .icon{background:#e7fafd}.chem a{background:linear-gradient(180deg,#3bc3d0,#168fad)}
-.bio .icon{background:#eaf9ef}.bio a{background:linear-gradient(180deg,#57cd85,#289e69)}
-.note{margin-top:22px;padding:16px 18px;border-radius:17px;background:#fff;border:1px solid #e2ebf4;color:#5c7288;font-size:11px;line-height:1.55}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.hero h1{font-size:28px}header{padding:0 14px}.badge{display:none}}
-</style>
-</head>
-<body>
-<header>
-  <div class="brand"><div class="logo">S</div><div><b>School<span>Verse</span></b><small>VIRTUAL LAB • 3D STEM</small></div></div>
-  <div class="badge">SchoolVerse Virtual Laboratory</div>
-</header>
-<main>
-  <section class="hero">
-    <h1>Phòng thí nghiệm ảo 3D</h1>
-    <p>Học sinh thao tác trực tiếp trên mô hình 3D, thay đổi tham số, quan sát hiện tượng, đọc số liệu và ghi kết quả thực hành.</p>
-  </section>
-
-  <section class="grid">
-    <article class="card speed">
-      <div class="icon">🚗</div>
-      <h2>Đo tốc độ xe lăn 3D</h2>
-      <p>Mô phỏng vật lý kiểu PhET với xe lăn, đường ray và hai cổng quang điện có thể kéo thay đổi vị trí.</p>
-      <div class="tags"><span>Kéo cổng quang</span><span>Xoay/Zoom 3D</span><span>Đo Δs–Δt</span><span>Tính tốc độ</span></div>
-      <a class="open" href="labs/physics_speedcart.html">Mở thí nghiệm →</a>
-    </article>
-
-    <article class="card physics">
-      <div class="icon">⚛️</div>
-      <h2>Phòng Vật lý 3D</h2>
-      <p>Bộ thí nghiệm vật lý tương tác: ma sát, phản xạ ánh sáng, mạch điện, sóng âm, truyền nhiệt, đòn bẩy, nam châm điện, Ác-si-mét và khối lượng riêng.</p>
-      <div class="tags"><span>9 thí nghiệm</span><span>Three.js</span><span>Dụng cụ đo</span><span>Nhật ký</span></div>
-      <a class="open" href="labs/physics_lab.html">Vào phòng Vật lý →</a>
-    </article>
-
-    <article class="card chem">
-      <div class="icon">⚗️</div>
-      <h2>Phòng Hóa học 3D</h2>
-      <p>Thực hành với chỉ thị màu, kết tủa, trung hòa, điều chế CO₂, tốc độ phản ứng và tách hỗn hợp bằng lọc.</p>
-      <div class="tags"><span>6 thí nghiệm</span><span>Hiện tượng trực quan</span><span>pH</span><span>Khí/Kết tủa</span></div>
-      <a class="open" href="labs/chemistry_lab.html">Vào phòng Hóa học →</a>
-    </article>
-
-    <article class="card bio">
-      <div class="icon">🧬</div>
-      <h2>Phòng Sinh học 3D</h2>
-      <p>Quan sát tế bào, thẩm thấu, quang hợp, thoát hơi nước, nảy mầm và nhịp tim trước/sau vận động.</p>
-      <div class="tags"><span>6 thí nghiệm</span><span>Kính hiển vi</span><span>Sinh lý thực vật</span><span>Con người</span></div>
-      <a class="open" href="labs/biology_lab.html">Vào phòng Sinh học →</a>
-    </article>
-  </section>
-
-  <div class="note">
-    <b>Lưu ý:</b> các mô phỏng 3D hiện tải thư viện Three.js từ CDN nên cần kết nối Internet khi mở lần đầu. Toàn bộ giao diện và logic thí nghiệm nằm trong các file HTML độc lập, thuận tiện để đưa lên GitHub/Vercel.
-  </div>
-</main>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f6fe5" />
+    <title>SchoolVerse UI V1</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/main.jsx"></script>
+  </body>
 </html>
