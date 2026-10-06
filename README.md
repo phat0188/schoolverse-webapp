@@ -1,29 +1,14 @@
-# SchoolVerse V1.1 – Clean UI
+# SchoolVerse V1.1.1 – HD Campus
 
-Bản giao diện sạch dùng cho web app Vercel hiện tại.
+Bản này giữ nguyên giao diện V1.1 Clean UI nhưng nâng chất lượng ảnh sân trường.
 
-## Thay đổi chính
-- Thay ảnh sân trường bằng ảnh mới có tên:
-  `TRƯỜNG THCS VÀ THPT LƯƠNG THẾ VINH`
-- HUD trên cùng gọn hơn
-- Menu trái mảnh hơn
-- Bảng nhiệm vụ nhỏ hơn
-- Nút chạy / nhảy / tương tác gọn hơn
-- Minimap nhỏ hơn
-- Map Clean:
-  - bỏ các thẻ tên khu vực React gây trùng chữ nền
-  - dùng hotspot hình tròn
-  - có `Bạn đang ở đây`
-  - panel thông tin nhỏ hơn
-  - khóa tỉ lệ map để hotspot ổn định hơn
-- Chưa kết nối database
+## Thay đổi
+- Ảnh campus tăng lên 2560 px chiều ngang
+- WebP quality 97
+- sharpen nhẹ để hiển thị tốt trên màn hình Full HD/2K
+- bỏ filter CSS làm ảnh mềm
+- giữ nguyên toàn bộ HUD, menu, nhiệm vụ, minimap và Map Clean
 
-## Cập nhật web app
-1. Giải nén ZIP.
-2. GitHub → Add file → Upload files.
-3. Upload toàn bộ file để ghi đè bản cũ.
-4. Commit changes.
-5. Vercel sẽ tự deploy lại.
-
-## Demo
-HS001 / 123456
+## Cập nhật
+Upload toàn bộ file lên GitHub để ghi đè bản cũ rồi Commit changes.
+Vercel sẽ tự deploy lại.
