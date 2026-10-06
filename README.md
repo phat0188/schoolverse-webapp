@@ -1,17 +1,29 @@
-# SchoolVerse UI V1 — Flat GitHub Version FIXED
+# SchoolVerse V1.1 – Clean UI
 
-Bản sửa dành cho repository GitHub cấu trúc phẳng.
+Bản giao diện sạch dùng cho web app Vercel hiện tại.
 
-## Đã sửa
-- Vite import trực tiếp `campus.webp`
-- Vite import trực tiếp `school-map.webp`
-- Vite import trực tiếp `classroom.svg`
-- Không cần thư mục `public/` hoặc `src/`
-- Không còn lỗi ảnh nền sân trường bị xám trên Vercel
+## Thay đổi chính
+- Thay ảnh sân trường bằng ảnh mới có tên:
+  `TRƯỜNG THCS VÀ THPT LƯƠNG THẾ VINH`
+- HUD trên cùng gọn hơn
+- Menu trái mảnh hơn
+- Bảng nhiệm vụ nhỏ hơn
+- Nút chạy / nhảy / tương tác gọn hơn
+- Minimap nhỏ hơn
+- Map Clean:
+  - bỏ các thẻ tên khu vực React gây trùng chữ nền
+  - dùng hotspot hình tròn
+  - có `Bạn đang ở đây`
+  - panel thông tin nhỏ hơn
+  - khóa tỉ lệ map để hotspot ổn định hơn
+- Chưa kết nối database
 
-## Upload lên GitHub
-Upload toàn bộ file trong thư mục này để ghi đè bản cũ, sau đó Commit changes.
-Vercel sẽ tự deploy lại.
+## Cập nhật web app
+1. Giải nén ZIP.
+2. GitHub → Add file → Upload files.
+3. Upload toàn bộ file để ghi đè bản cũ.
+4. Commit changes.
+5. Vercel sẽ tự deploy lại.
 
 ## Demo
 HS001 / 123456

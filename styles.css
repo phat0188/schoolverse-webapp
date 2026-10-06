@@ -3,3 +3,290 @@
 .classroom-layout{display:grid;grid-template-columns:1.35fr .75fr;gap:18px}.classroom-scene{position:relative;min-height:650px;border-radius:28px;overflow:hidden;box-shadow:var(--shadow);background:#e7bb8e}.classroom-scene>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.teacher-dialog{position:absolute;left:18px;bottom:18px;width:min(480px,calc(100% - 36px));padding:14px;border-radius:20px;display:flex;gap:11px;align-items:flex-start}.teacher-dialog>span{font-size:34px}.teacher-dialog p{margin:3px 0 0;color:#5f7692}.focus-meter{position:absolute;right:18px;top:18px;padding:10px 12px;border-radius:16px;display:grid;grid-template-columns:auto 100px auto;gap:8px;align-items:center;font-size:11px;font-weight:900}.focus-meter>div{height:7px;background:#dfe9f2;border-radius:999px;overflow:hidden}.focus-meter i{display:block;height:100%;background:linear-gradient(90deg,#43cb78,#ffbc39)}.quiz-card{border-radius:26px;padding:22px}.quiz-top{display:flex;justify-content:space-between}.quiz-card h2{font-size:25px}.formula{font-family:Consolas,monospace;background:#eef5ff;border-radius:14px;padding:13px;color:#245989!important;font-weight:900}.answers{display:grid;gap:10px;margin:18px 0}.answers button{display:flex;gap:12px;align-items:center;border:2px solid #dce8f3;background:white;border-radius:14px;padding:13px}.answers button>span{width:32px;height:32px;border-radius:10px;background:#edf5ff;display:grid;place-items:center}.answers button.selected{border-color:#2c83ee;background:#eef6ff}.answers button.correct{border-color:#39bb70;background:#edfff3}.answers button.wrong{border-color:#ef6767;background:#fff1f1}.feedback{padding:11px;border-radius:13px;margin-bottom:12px}.feedback.ok{background:#edfff3;color:#278a50}.feedback.bad{background:#fff1f1;color:#bf4d4d}.quiz-card>.primary{width:100%}
 @media(max-width:1050px){.schedule-layout,.classroom-layout{grid-template-columns:1fr}}
 @media(max-width:900px){.gamenav{grid-template-columns:repeat(6,1fr)}}
+
+
+/* =========================================================
+   SCHOOLVERSE V1.1 CLEAN UI
+   ========================================================= */
+
+.hud-v11{
+  height:72px;
+  padding:0 18px;
+  background:rgba(255,255,255,.94);
+  border-bottom:1px solid rgba(204,220,237,.86);
+  box-shadow:0 6px 22px rgba(20,58,100,.07);
+}
+.hud-v11 .hudbrand{gap:9px}
+.hud-v11 .hudbrand b{font-size:20px}
+.hud-v11 .hudbrand small{
+  display:block;
+  margin-top:1px;
+  font-size:7px;
+  letter-spacing:1.5px;
+  color:#8ca0b8;
+  font-weight:900;
+}
+.hud-v11 .miniS{width:38px;height:38px;border-radius:12px}
+.hud-v11 .hudmid>span{
+  border:1px solid #e4edf7;
+  background:rgba(243,248,254,.95);
+  box-shadow:0 5px 14px rgba(25,68,116,.05);
+}
+.hud-v11 .hudmid button{
+  border:1px solid #edf2f8;
+  background:#fff7eb;
+  box-shadow:0 5px 14px rgba(25,68,116,.05);
+}
+.hud-v11 .hudprofile{
+  padding:5px 8px;
+  border-radius:16px;
+}
+.hud-v11 .face{width:40px;height:40px;font-size:22px}
+.hud-v11 .xp{width:128px;height:4px}
+
+.gamenav{
+  top:90px;
+  left:14px;
+  width:86px;
+  padding:8px 7px;
+  border-radius:22px;
+  background:rgba(21,56,96,.86);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 14px 34px rgba(10,38,72,.18);
+}
+.gamenav a{padding:9px 4px;border-radius:15px}
+.gamenav a span{font-size:21px}
+.gamenav small{font-size:9px}
+.gamenav a.active{
+  background:linear-gradient(180deg,rgba(53,139,246,.92),rgba(25,102,207,.92));
+  box-shadow:0 8px 18px rgba(16,89,183,.28);
+}
+
+.main{padding-top:72px}
+
+.campus-v11{
+  min-height:calc(100vh - 72px);
+  background:#d7efff;
+}
+.campus-v11>img{
+  object-fit:cover;
+  object-position:center;
+  filter:saturate(1.02) contrast(1.015);
+}
+.campus-vignette{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(11,39,76,.05),transparent 28%,transparent 72%,rgba(11,39,76,.05)),
+    linear-gradient(180deg,transparent 72%,rgba(10,38,74,.08));
+}
+.campus-welcome-v11{
+  left:112px;
+  bottom:18px;
+  width:min(420px,calc(100% - 170px));
+  padding:17px 19px;
+  border-radius:22px;
+  background:rgba(255,255,255,.90);
+  box-shadow:0 18px 38px rgba(18,56,96,.14);
+}
+.campus-welcome-v11 h1{font-size:25px;margin:8px 0 4px}
+.campus-welcome-v11 p{font-size:13px}
+.campus-welcome-v11 .row{margin-top:12px}
+.campus-welcome-v11 .primary,
+.campus-welcome-v11 .soft{padding:10px 13px;font-size:12px}
+
+.today-v11{
+  right:18px;
+  top:18px;
+  width:310px;
+  padding:14px;
+  border-radius:21px;
+  background:rgba(255,255,255,.91);
+  box-shadow:0 18px 38px rgba(18,56,96,.14);
+}
+.today-v11 .todayhead h3{font-size:18px}
+.today-v11 .todayhead button{font-size:11px}
+.today-v11 .miniquest{
+  grid-template-columns:34px 1fr auto;
+  padding:9px 0;
+}
+.today-v11 .miniquest>span{width:32px;height:32px}
+.today-v11 .miniquest b{font-size:11px}
+
+.actions-v11{
+  right:155px;
+  bottom:16px;
+  gap:9px;
+}
+.actions-v11 button{
+  width:60px;height:60px;
+  background:rgba(18,57,97,.84);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 10px 24px rgba(9,37,72,.20);
+  font-size:20px;
+}
+.actions-v11 button small{font-size:9px}
+
+.minimap-v11{
+  width:112px;height:112px;
+  right:18px;bottom:14px;
+  border-width:5px;
+  box-shadow:0 14px 30px rgba(10,38,74,.18);
+}
+.minimap-v11 span{font-size:25px}
+
+.map-page-v11{
+  padding-left:118px;
+  padding-top:22px;
+}
+.map-title-v11{margin-bottom:12px}
+.map-title-v11 h1{font-size:30px}
+.map-title-v11 p{font-size:13px}
+.map-summary-v11 span{
+  padding:8px 11px;
+  background:rgba(255,255,255,.88);
+  border:1px solid #e4edf6;
+}
+
+.mapstage-v11{
+  min-height:660px;
+  aspect-ratio:16 / 9;
+  height:auto;
+  max-height:calc(100vh - 165px);
+  background:#dcefbf;
+  border-radius:27px;
+  box-shadow:0 22px 50px rgba(24,66,111,.15);
+}
+.mapstage-v11>img{
+  object-fit:fill;
+  object-position:center;
+}
+.map-soft-shade{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 70%,rgba(13,42,74,.05));
+}
+
+.map-hotspot{
+  position:absolute;
+  z-index:5;
+  width:42px;height:42px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  border:2px solid rgba(255,255,255,.92);
+  background:rgba(255,255,255,.88);
+  box-shadow:
+    0 8px 20px rgba(24,66,111,.18),
+    0 0 0 7px rgba(255,255,255,.13);
+  display:grid;
+  place-items:center;
+  font-size:19px;
+  padding:0;
+}
+.map-hotspot:hover{
+  transform:translate(-50%,-54%) scale(1.10);
+}
+.map-hotspot.active{
+  background:#1677e8;
+  color:white;
+  box-shadow:
+    0 10px 24px rgba(22,119,232,.30),
+    0 0 0 8px rgba(22,119,232,.13);
+}
+.map-hotspot.active::after{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius:50%;
+  border:2px solid rgba(22,119,232,.38);
+  animation:svMapPulse 1.8s ease-out infinite;
+}
+@keyframes svMapPulse{
+  0%{transform:scale(.75);opacity:.8}
+  100%{transform:scale(1.5);opacity:0}
+}
+
+.you-are-here{
+  position:absolute;
+  z-index:6;
+  transform:translate(-50%,-115%);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#28b96f;
+  color:white;
+  font-size:10px;
+  font-weight:900;
+  box-shadow:0 8px 18px rgba(29,140,83,.23);
+  pointer-events:none;
+}
+.you-are-here span{
+  width:24px;height:24px;
+  display:grid;place-items:center;
+  background:white;
+  border-radius:50%;
+}
+
+.mapinfo-v11{
+  left:16px;
+  bottom:16px;
+  width:305px;
+  padding:16px;
+  border-radius:21px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 16px 34px rgba(20,60,103,.13);
+}
+.mapinfo-v11 .mapinfo-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0 7px;
+}
+.mapinfo-v11 .bigicon{
+  margin:0;
+  width:48px;height:48px;
+  border-radius:15px;
+  font-size:25px;
+}
+.mapinfo-v11 h2{margin:0;font-size:21px}
+.mapinfo-v11 small{display:block;color:#7c8fa7;margin-top:2px}
+.mapinfo-v11 p{
+  margin:0 0 12px;
+  font-size:12.5px;
+  line-height:1.48;
+}
+
+@media(max-width:1000px){
+  .today-v11{width:285px}
+  .campus-welcome-v11{left:106px}
+  .map-page-v11{padding-left:110px}
+}
+@media(max-width:900px){
+  .hud-v11{height:68px}
+  .main{padding-top:68px}
+  .gamenav{
+    left:10px;right:10px;bottom:10px;top:auto;width:auto;
+    grid-template-columns:repeat(6,1fr);
+  }
+  .campus-welcome-v11{
+    left:14px;right:14px;bottom:92px;width:auto;
+  }
+  .today-v11{
+    left:14px;right:14px;top:14px;width:auto;
+  }
+  .actions-v11{display:none}
+  .minimap-v11{right:14px;bottom:198px;width:88px;height:88px}
+  .map-page-v11{padding:18px 12px 104px}
+  .mapstage-v11{
+    min-height:640px;
+    max-height:none;
+    aspect-ratio:auto;
+  }
+  .mapinfo-v11{
+    left:12px;right:12px;bottom:12px;width:auto;
+  }
+}
