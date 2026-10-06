@@ -1,30 +1,17 @@
-# SchoolVerse UI V1 — Flat GitHub Version
+# SchoolVerse UI V1 — Flat GitHub Version FIXED
 
-Phiên bản này được chỉnh để upload trực tiếp lên GitHub bằng giao diện web,
-không cần thư mục `src` hoặc `public`.
+Bản sửa dành cho repository GitHub cấu trúc phẳng.
 
-## Cấu trúc
-- App.jsx
-- main.jsx
-- styles.css
-- campus.webp
-- classroom.svg
-- school-map.webp
-- index.html
-- package.json
-- vite.config.js
+## Đã sửa
+- Vite import trực tiếp `campus.webp`
+- Vite import trực tiếp `school-map.webp`
+- Vite import trực tiếp `classroom.svg`
+- Không cần thư mục `public/` hoặc `src/`
+- Không còn lỗi ảnh nền sân trường bị xám trên Vercel
 
-## Chạy local
-```bash
-npm install
-npm run dev
-```
-
-## Deploy Vercel
-Import repository GitHub vào Vercel.
-Framework preset: Vite
-Build command: npm run build
-Output directory: dist
+## Upload lên GitHub
+Upload toàn bộ file trong thư mục này để ghi đè bản cũ, sau đó Commit changes.
+Vercel sẽ tự deploy lại.
 
 ## Demo
 HS001 / 123456
